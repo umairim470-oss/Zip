@@ -7,17 +7,63 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #d1d7db; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        
         .chat-container { width: 100%; max-width: 500px; height: 90vh; background: #efeae2; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
-        
         .header { background-color: #008069; color: white; padding: 15px 20px; display: flex; align-items: center; gap: 12px; }
         .avatar { width: 40px; height: 40px; background: #dfe5e7; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #54656f; font-weight: bold; }
         .header-info h3 { font-size: 16px; font-weight: 600; }
         .header-info p { font-size: 12px; color: #d9fdd3; }
-
         .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
         .message { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
         .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
         .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
         .sender-name { font-size: 11px; font-weight: bold; color: #008069; margin-bottom: 3px; display: block; }
-        .timestamp { font-size: 10px; color: #667781; float:
+        .timestamp { font-size: 10px; color: #667781; float: right; margin-left: 10px; margin-top: 5px; }
+        .input-area { background-color: #f0f2f5; padding: 10px 15px; display: flex; gap: 10px; align-items: center; }
+        .input-area input { flex: 1; padding: 12px 15px; border: none; border-radius: 24px; outline: none; font-size: 15px; }
+        .input-area button { background-color: #008069; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+        .input-area button:hover { background-color: #006d59; }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="header">
+        <div class="avatar">Z</div>
+        <div class="header-info">
+            <h3>Zip Chat</h3>
+            <p>online</p>
+        </div>
+    </div>
+    <div class="messages" id="messages"></div>
+    <form class="input-area" id="chat-form">
+        <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off" required />
+        <button type="submit">➤</button>
+    </form>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('msg-input');
+    const messages = document.getElementById('messages');
+    const username = prompt("Enter your name:") || "User_" + Math.floor(Math.random() * 1000);
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (input.value.trim()) {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            socket.emit('chat message', { user: username, text: input.value, time: time });
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', (data) => {
+        const div = document.createElement('div');
+        const isMe = data.user === username;
+        div.classList.add('message', isMe ? 'sent' : 'received');
+        div.innerHTML = `${!isMe ? `<span class="sender-name">${data.user}</span>` : ''}<span>${data.text}</span><span class="timestamp">${data.time}</span>`;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    });
+</script>
+</body>
+</html>
