@@ -5,7 +5,10 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+// Photo aur video bhejne ke liye 25MB limit set ki gayi hai
+const io = new Server(server, {
+    maxHttpBufferSize: 25 * 1024 * 1024
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -28,22 +31,55 @@ io.on('connection', (socket) => {
         socket.to(roomId).emit('system status', `${socket.username} (${socket.gender}) is Online`);
     });
 
-    socket.on('room message', ({ msgId, text, time }) => {
+    // Text, Photo ya Video message bhejne ke liye
+    socket.on('room message', ({ msgId, text, mediaData, mediaType, time }) => {
         if (socket.roomId && socket.username) {
             io.to(socket.roomId).emit('room message', {
                 msgId: msgId,
                 senderId: socket.id,
                 senderName: socket.username,
                 senderGender: socket.gender,
-                text: text,
+                text: text || "",
+                mediaData: mediaData || null,
+                mediaType: mediaType || null,
                 time: time
             });
         }
     });
 
+    // Seen receipt
     socket.on('message seen', ({ msgId }) => {
         if (socket.roomId) {
             socket.to(socket.roomId).emit('message seen', { msgId });
+        }
+    });
+
+    // Voice / Video Call Signaling (WebRTC)
+    socket.on('call-user', ({ offer, callType }) => {
+        if (socket.roomId) {
+            socket.to(socket.roomId).emit('incoming-call', {
+                offer: offer,
+                callType: callType,
+                callerName: socket.username
+            });
+        }
+    });
+
+    socket.on('answer-call', ({ answer }) => {
+        if (socket.roomId) {
+            socket.to(socket.roomId).emit('call-answered', { answer });
+        }
+    });
+
+    socket.on('ice-candidate', ({ candidate }) => {
+        if (socket.roomId) {
+            socket.to(socket.roomId).emit('ice-candidate', { candidate });
+        }
+    });
+
+    socket.on('end-call', () => {
+        if (socket.roomId) {
+            socket.to(socket.roomId).emit('call-ended');
         }
     });
 
@@ -56,6 +92,7 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('room users', rooms[roomId]);
             if (leftUser) {
                 io.to(roomId).emit('system status', `${leftUser} (${leftGender}) went Offline`);
+                io.to(roomId).emit('call-ended');
             }
             if (rooms[roomId].length === 0) {
                 delete rooms[roomId];
