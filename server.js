@@ -9,41 +9,54 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Har secret room ke members track karne ke liye
 const rooms = {};
 
 io.on('connection', (socket) => {
-    socket.on('join room', ({ roomId, username }) => {
-        if (!roomId) return;
+    socket.on('join room', ({ roomId, username, gender }) => {
+        if (!roomId || !username || username.trim().length < 5 || !gender) return;
 
         socket.join(roomId);
         socket.roomId = roomId;
-        socket.username = username;
+        socket.username = username.trim();
+        socket.gender = gender;
 
         if (!rooms[roomId]) rooms[roomId] = [];
-        rooms[roomId].push({ id: socket.id, name: username });
+        rooms[roomId] = rooms[roomId].filter(u => u.id !== socket.id);
+        rooms[roomId].push({ id: socket.id, name: socket.username, gender: socket.gender });
 
-        // Sirf isi room ke logon ko batayein ki kaun online hai
         io.to(roomId).emit('room users', rooms[roomId]);
+        socket.to(roomId).emit('system status', `${socket.username} (${socket.gender}) is Online`);
     });
 
-    // Sirf isi secret room mein message bhejna
-    socket.on('room message', ({ text, time }) => {
+    socket.on('room message', ({ msgId, text, time }) => {
         if (socket.roomId && socket.username) {
             io.to(socket.roomId).emit('room message', {
+                msgId: msgId,
                 senderId: socket.id,
                 senderName: socket.username,
+                senderGender: socket.gender,
                 text: text,
                 time: time
             });
         }
     });
 
+    socket.on('message seen', ({ msgId }) => {
+        if (socket.roomId) {
+            socket.to(socket.roomId).emit('message seen', { msgId });
+        }
+    });
+
     socket.on('disconnect', () => {
         const roomId = socket.roomId;
+        const leftUser = socket.username;
+        const leftGender = socket.gender;
         if (roomId && rooms[roomId]) {
             rooms[roomId] = rooms[roomId].filter(u => u.id !== socket.id);
             io.to(roomId).emit('room users', rooms[roomId]);
+            if (leftUser) {
+                io.to(roomId).emit('system status', `${leftUser} (${leftGender}) went Offline`);
+            }
             if (rooms[roomId].length === 0) {
                 delete rooms[roomId];
             }
