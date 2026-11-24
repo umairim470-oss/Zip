@@ -5,41 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Welcome to Zip</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .app{width:100%;height:100dvh;display:flex;flex-direction:column;position:relative}
-.hdr{background:#008069;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr{background:linear-gradient(90deg,#008069,#006d59);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 5px rgba(0,0,0,.15);z-index:10}
 .hdr-l{display:flex;align-items:center;gap:10px}
-.av{width:40px;height:40px;background:#dfe5e7;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#008069;font-weight:700;position:relative}
-.dot{width:10px;height:10px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
-.inv-btn{background:#25d366;color:#fff;border:none;padding:8px 13px;border-radius:20px;font-weight:700;font-size:12px}
-.ic-btn{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:16px}
+.av{width:42px;height:42px;background:#dfe5e7;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#008069;font-weight:700;font-size:17px;position:relative;flex-shrink:0}
+.dot{width:11px;height:11px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
+.inv-btn{background:#25d366;color:#fff;border:none;padding:8px 13px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer}
+.ic-btn{background:rgba(255,255,255,.2);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}
 .reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:15px}
-.badge{width:70px;height:70px;background:#008069;border-radius:20px;display:flex;justify-content:center;align-items:center;font-size:34px;color:#fff}
-.inp{width:100%;max-width:290px;padding:13px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center}
+.badge{width:72px;height:72px;background:#008069;border-radius:20px;display:flex;justify-content:center;align-items:center;font-size:36px;color:#fff}
+.inp{width:100%;max-width:290px;padding:13px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;outline:none}
 .g-box{display:flex;gap:12px;width:100%;max-width:290px}
-.g-btn{flex:1;padding:13px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700}
+.g-btn{flex:1;padding:13px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
 .g-btn.act{border-color:#008069;background:#d9fdd3;color:#008069}
 .err{color:#e53935;font-size:13px;font-weight:700;display:none}
-.go-btn{background:#008069;color:#fff;border:none;padding:14px 32px;border-radius:25px;font-size:16px;font-weight:700}
-.home{flex:1;display:none;flex-direction:column;overflow:hidden}
+.go-btn{background:#008069;color:#fff;border:none;padding:14px 32px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer}
+.home{flex:1;display:none;flex-direction:column;overflow:hidden;background:#fff}
 .list{flex:1;overflow-y:auto}
-.row{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid #eee;gap:12px}
+.row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f0f2f5;gap:13px;cursor:pointer}
+.row:active{background:#f5f6f6}
+.unread-badge{background:#25d366;color:#fff;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;justify-content:center;align-items:center;padding:0 6px}
 .chat{flex:1;display:none;flex-direction:column;overflow:hidden;background:#efeae2}
-.msgs{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-.msg{max-width:80%;padding:8px 12px;border-radius:10px;font-size:15px;word-wrap:break-word}
-.sent{background:#d9fdd3;align-self:flex-end}
-.rcvd{background:#fff;align-self:flex-start}
-.media{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:4px 0}
+.msgs{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:18px 18px}
+.msg{max-width:80%;padding:8px 12px;border-radius:12px;font-size:15px;line-height:1.4;box-shadow:0 1px 2px rgba(0,0,0,.1);word-wrap:break-word}
+.sent{background:#d9fdd3;align-self:flex-end;border-top-right-radius:2px}
+.rcvd{background:#fff;align-self:flex-start;border-top-left-radius:2px}
+.media{max-width:100%;max-height:230px;border-radius:8px;display:block;margin:4px 0}
 .meta{float:right;margin-left:8px;margin-top:4px;font-size:10px;color:#667781}
 .seen{color:#53bdeb;font-weight:700}
-.bar{background:#f0f2f5;padding:8px 10px;display:flex;gap:8px;align-items:center}
-.bar input[type=text]{flex:1;padding:11px 14px;border:none;border-radius:20px;font-size:15px;outline:none}
+.bar{background:#f0f2f5;padding:9px 10px;display:flex;gap:8px;align-items:center}
+.bar input[type=text]{flex:1;padding:11px 15px;border:none;border-radius:22px;font-size:15px;outline:none;background:#fff}
 .c-ov{position:fixed;inset:0;background:rgba(11,20,26,.96);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:30px 20px;color:#fff}
 .v-box{width:100%;flex:1;position:relative;margin:15px 0;background:#1f2c34;border-radius:12px;overflow:hidden}
 #r-vid{width:100%;height:100%;object-fit:cover}
 #l-vid{width:100px;height:140px;object-fit:cover;position:absolute;bottom:10px;right:10px;border-radius:10px;border:2px solid #25d366}
-.c-btn{width:58px;height:58px;border-radius:50%;border:none;font-size:22px;color:#fff}
+.c-btn{width:58px;height:58px;border-radius:50%;border:none;font-size:22px;color:#fff;cursor:pointer}
 </style>
 </head>
 <body>
@@ -68,7 +70,7 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="chat" id="s-chat">
     <div class="hdr">
       <div class="hdr-l">
-        <button type="button" id="b-back" style="background:none;border:none;color:#fff;font-size:22px">←</button>
+        <button type="button" id="b-back" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">←</button>
         <div class="av" id="f-av">U</div>
         <div><h3 id="f-name" style="font-size:15px">Friend</h3><p id="f-st" style="font-size:11px">Offline</p></div>
       </div>
@@ -80,9 +82,9 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
     <div class="msgs" id="msgs"></div>
     <form class="bar" id="f-msg">
       <input type="file" id="f-med" accept="image/*,video/*" style="display:none">
-      <button type="button" id="b-att" style="background:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:18px">📎</button>
+      <button type="button" id="b-att" style="background:#fff;border:none;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer">📎</button>
       <input type="text" id="t-msg" placeholder="Message likhein...">
-      <button type="submit" style="background:#008069;color:#fff;border:none;width:42px;height:42px;border-radius:50%;font-size:17px">➤</button>
+      <button type="submit" style="background:#008069;color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:17px;cursor:pointer">➤</button>
     </form>
   </div>
 
@@ -102,7 +104,9 @@ const socket = typeof io !== 'undefined' ? io() : {emit:()=>{},on:()=>{}};
 const invFrom = new URLSearchParams(location.search).get('invite');
 let me = null; try{ me = JSON.parse(localStorage.getItem('zip_user')); }catch(e){}
 let chats = {}; try{ chats = JSON.parse(localStorage.getItem('zip_chats')) || {}; }catch(e){}
-let contacts = [], fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null;
+let contacts = []; try{ contacts = JSON.parse(localStorage.getItem('zip_contacts')) || []; }catch(e){}
+let unread = {};
+let fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null;
 const rtc = {iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
 
 document.getElementById('b-m').onclick = () => { gen='Male'; document.getElementById('b-m').classList.add('act'); document.getElementById('b-f').classList.remove('act'); };
@@ -134,27 +138,45 @@ document.getElementById('b-inv').onclick = () => {
 };
 
 socket.on('contact list',(l)=>{
-  contacts = l; drawList();
-  if(fid){ const f = contacts.find(c=>c.id===fid); if(f) document.getElementById('f-st').innerText = f.online?'Online':'Offline'; }
+  l.forEach(srvFriend => {
+    const idx = contacts.findIndex(c => c.id === srvFriend.id);
+    if(idx >= 0) contacts[idx] = srvFriend;
+    else contacts.unshift(srvFriend);
+  });
+  try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
+  drawList();
+  if(fid){
+    const f = contacts.find(c=>c.id===fid);
+    if(f) document.getElementById('f-st').innerText = f.online?'Online':'Offline';
+  }
 });
 
 function drawList(){
   const box = document.getElementById('c-list');
-  if(!contacts.length){ box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi dost nahi juda</h3><p style="margin-top:8px">Upar <b>+ Invite Link</b> daba kar dost ko link bhejein.</p></div>'; return; }
+  if(!contacts.length){
+    box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi dost nahi juda</h3><p style="margin-top:8px">Upar <b>+ Invite Link</b> daba kar dost ko link bhejein. Jaise hi woh judenge ya message karenge, unki chat yahan aa jayegi.</p></div>';
+    return;
+  }
   box.innerHTML='';
   contacts.forEach(f=>{
-    const m = chats[f.id]||[], last = m[m.length-1];
+    const m = chats[f.id]||[], last = m[m.length-1], uCount = unread[f.id]||0;
     const r = document.createElement('div'); r.className='row';
-    r.innerHTML='<div class="av">'+f.name[0].toUpperCase()+(f.online?'<span class="dot"></span>':'')+'</div><div style="flex:1"><div style="display:flex;justify-content:space-between"><b>'+f.name+' ('+f.gender+')</b><span style="font-size:11px;color:#667781">'+(last?last.time:'')+'</span></div><div style="font-size:13px;color:#667781">'+(last?(last.mediaType?'📎 Media':last.text):'Tap to chat')+'</div></div>';
+    r.innerHTML='<div class="av">'+f.name[0].toUpperCase()+(f.online?'<span class="dot"></span>':'')+'</div>'+
+      '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>'+f.name+' ('+f.gender+')</b><span style="font-size:11px;color:'+(uCount?'#25d366':'#667781')+'">'+(last?last.time:'')+'</span></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):'Tap to chat')+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
     r.onclick = ()=>{
       fid = f.id;
+      unread[f.id] = 0;
       document.getElementById('s-home').style.display='none';
       document.getElementById('s-chat').style.display='flex';
       document.getElementById('f-av').innerText=f.name[0].toUpperCase();
       document.getElementById('f-name').innerText=f.name+' ('+f.gender+')';
       document.getElementById('f-st').innerText=f.online?'Online':'Offline';
       const mb = document.getElementById('msgs'); mb.innerHTML='';
-      (chats[f.id]||[]).forEach(x=>{ addMsg(x); if(x.fromUserId===f.id && !x.seenSent){ socket.emit('message seen',{toUserId:f.id,msgId:x.msgId}); x.seenSent=true; } });
+      (chats[f.id]||[]).forEach(x=>{
+        addMsg(x);
+        if(x.fromUserId===f.id && !x.seenSent){ socket.emit('message seen',{toUserId:f.id,msgId:x.msgId}); x.seenSent=true; }
+      });
       try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
     };
     box.appendChild(r);
@@ -186,10 +208,30 @@ document.getElementById('f-med').onchange = (e)=>{
 
 socket.on('private message',(d)=>{
   const id = d.fromUserId===me.id ? d.toUserId : d.fromUserId;
-  if(!chats[id]) chats[id]=[]; chats[id].push(d);
-  try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
-  if(fid===id){ addMsg(d); if(d.fromUserId!==me.id) socket.emit('message seen',{toUserId:id,msgId:d.msgId}); }
-  else drawList();
+  if(!chats[id]) chats[id]=[];
+  // Duplicate message prevent karein
+  if(!chats[id].some(x => x.msgId === d.msgId)){
+    chats[id].push(d);
+    try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
+  }
+
+  // Agar naya sender hai toh list mein add karein aur sabse upar layein
+  const existingIdx = contacts.findIndex(c => c.id === id);
+  if(existingIdx === -1 && d.fromUserId !== me.id){
+    contacts.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
+    try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
+  } else if(existingIdx > 0){
+    const [moved] = contacts.splice(existingIdx, 1);
+    contacts.unshift(moved);
+  }
+
+  if(fid===id){
+    addMsg(d);
+    if(d.fromUserId!==me.id) socket.emit('message seen',{toUserId:id,msgId:d.msgId});
+  } else {
+    if(d.fromUserId!==me.id) unread[id] = (unread[id]||0) + 1;
+    drawList();
+  }
 });
 
 function addMsg(d){
