@@ -9,33 +9,45 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Connected users track karne ke liye
-const users = {};
+// Har secret room ke members track karne ke liye
+const rooms = {};
 
 io.on('connection', (socket) => {
-    // Jab user apna naam register kare
-    socket.on('register', (username) => {
-        users[socket.id] = { id: socket.id, name: username };
-        io.emit('user list', Object.values(users));
+    socket.on('join room', ({ roomId, username }) => {
+        if (!roomId) return;
+
+        socket.join(roomId);
+        socket.roomId = roomId;
+        socket.username = username;
+
+        if (!rooms[roomId]) rooms[roomId] = [];
+        rooms[roomId].push({ id: socket.id, name: username });
+
+        // Sirf isi room ke logon ko batayein ki kaun online hai
+        io.to(roomId).emit('room users', rooms[roomId]);
     });
 
-    // Private 1-to-1 message bhejne ke liye
-    socket.on('private message', ({ to, text, time }) => {
-        const sender = users[socket.id];
-        if (sender && users[to]) {
-            io.to(to).emit('private message', {
-                from: socket.id,
-                senderName: sender.name,
+    // Sirf isi secret room mein message bhejna
+    socket.on('room message', ({ text, time }) => {
+        if (socket.roomId && socket.username) {
+            io.to(socket.roomId).emit('room message', {
+                senderId: socket.id,
+                senderName: socket.username,
                 text: text,
                 time: time
             });
         }
     });
 
-    // User disconnect hone par list update karein
     socket.on('disconnect', () => {
-        delete users[socket.id];
-        io.emit('user list', Object.values(users));
+        const roomId = socket.roomId;
+        if (roomId && rooms[roomId]) {
+            rooms[roomId] = rooms[roomId].filter(u => u.id !== socket.id);
+            io.to(roomId).emit('room users', rooms[roomId]);
+            if (rooms[roomId].length === 0) {
+                delete rooms[roomId];
+            }
+        }
     });
 });
 
