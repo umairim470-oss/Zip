@@ -16,22 +16,33 @@
         .header-info h3 { font-size: 16px; font-weight: 600; }
         .header-info p { font-size: 12px; color: #d9fdd3; }
         .invite-btn { background-color: #25d366; color: white; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .invite-btn:hover { background-color: #1ebe5d; }
 
-        /* Welcome / Lock Screen */
-        .lock-screen { flex: 1; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; gap: 15px; }
-        .lock-screen h2 { color: #111b21; font-size: 20px; }
-        .lock-screen p { color: #667781; font-size: 14px; line-height: 1.5; }
-        .create-btn { background-color: #008069; color: white; border: none; padding: 14px 24px; border-radius: 25px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        /* Lock & Name Entry Screens */
+        .center-screen { flex: 1; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 25px; text-align: center; gap: 14px; }
+        .center-screen h2 { color: #111b21; font-size: 20px; }
+        .center-screen p { color: #667781; font-size: 14px; line-height: 1.5; }
+        .name-input { width: 100%; max-width: 280px; padding: 12px 15px; border: 2px solid #008069; border-radius: 8px; font-size: 15px; outline: none; text-align: center; }
+        
+        /* Gender Selection */
+        .gender-group { display: flex; gap: 12px; width: 100%; max-width: 280px; justify-content: center; }
+        .gender-btn { flex: 1; padding: 11px; border: 2px solid #cfd8dc; background: #f8f9fa; border-radius: 8px; font-size: 14px; font-weight: 600; color: #37474f; cursor: pointer; transition: 0.2s; }
+        .gender-btn.selected { border-color: #008069; background-color: #d9fdd3; color: #008069; }
+
+        .error-text { color: #e53935; font-size: 13px; font-weight: 600; display: none; }
+        .action-btn { background-color: #008069; color: white; border: none; padding: 13px 26px; border-radius: 25px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 4px; }
 
         /* Chat Screen */
         .chat-screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
         .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
-        .message { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
+        .status-pill { align-self: center; background: #e1f3fb; color: #54656f; font-size: 11.5px; padding: 4px 12px; border-radius: 12px; margin: 4px 0; }
+        .message { max-width: 78%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
         .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
         .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
         .sender-name { font-size: 11px; font-weight: bold; color: #008069; margin-bottom: 3px; display: block; }
-        .timestamp { font-size: 10px; color: #667781; float: right; margin-left: 10px; margin-top: 5px; }
+        .meta-info { float: right; margin-left: 10px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+        .timestamp { font-size: 10px; color: #667781; }
+        .ticks { font-size: 11px; font-weight: bold; color: #8696a0; }
+        .ticks.seen { color: #53bdeb; }
 
         /* Input Area */
         .input-area { background-color: #f0f2f5; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
@@ -47,25 +58,41 @@
             <div class="avatar">🔒</div>
             <div class="header-info">
                 <h3 id="header-title">Zip Private</h3>
-                <p id="header-subtitle">End-to-End Invite Only</p>
+                <p id="header-subtitle">Invite Only Chat</p>
             </div>
         </div>
         <button class="invite-btn" id="copy-invite-btn" style="display: none;" onclick="copyInviteLink()">+ Invite Link</button>
     </div>
 
-    <!-- Lock Screen (Agar bina invite link ke khola jaye) -->
-    <div class="lock-screen" id="lock-screen">
+    <!-- Screen 1: Lock Screen -->
+    <div class="center-screen" id="lock-screen">
         <div style="font-size: 48px;">🔐</div>
         <h2>Private Chat Room</h2>
-        <p>Yahan koi bhi public user aapki chat nahi dekh sakta. Naya secret room banayein aur link apne dost ko bhejein.</p>
-        <button class="create-btn" onclick="createNewRoom()">Naya Private Chat Banayein</button>
+        <p>Sirf invite link wale log hi is chat mein jud sakte hain.</p>
+        <button class="action-btn" onclick="createNewRoom()">Naya Private Chat Banayein</button>
     </div>
 
-    <!-- Private Chat Screen -->
+    <!-- Screen 2: Mandatory 5-Letter Name & Gender Entry -->
+    <div class="center-screen" id="name-screen" style="display: none;">
+        <div style="font-size: 40px;">👤</div>
+        <h2>Enter your 5 word name</h2>
+        <p>Chat mein jaane ke liye 5 akshar ka naam likhein aur Gender chunein.</p>
+        <input type="text" id="username-input" class="name-input" placeholder="Enter your 5 word name" autocomplete="off" />
+        
+        <div class="gender-group">
+            <button type="button" class="gender-btn" id="btn-male" onclick="selectGender('Male')">👨 Male</button>
+            <button type="button" class="gender-btn" id="btn-female" onclick="selectGender('Female')">👩 Female</button>
+        </div>
+
+        <div class="error-text" id="name-error">5 akshar ka naam aur Male/Female chunna zaroori hai!</div>
+        <button class="action-btn" onclick="enterChat()">Chat Shuru Karein</button>
+    </div>
+
+    <!-- Screen 3: Private Chat Screen -->
     <div class="chat-screen" id="chat-screen">
         <div class="messages" id="messages"></div>
         <form class="input-area" id="chat-form">
-            <input type="text" id="msg-input" placeholder="Private message likhein..." autocomplete="off" required />
+            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" required />
             <button type="submit">➤</button>
         </form>
     </div>
@@ -76,52 +103,88 @@
     const socket = io();
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get('room');
-
     let myName = "";
+    let selectedGender = "";
 
-    // Agar URL mein secret room code hai toh chat kholein
     if (roomId) {
         document.getElementById('lock-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('copy-invite-btn').style.display = 'block';
-
-        myName = prompt("Apna naam likhein:") || "User_" + Math.floor(Math.random() * 1000);
-        socket.emit('join room', { roomId: roomId, username: myName });
+        document.getElementById('name-screen').style.display = 'flex';
     }
 
-    // Naya secret room banana
     function createNewRoom() {
         const randomCode = Math.random().toString(36).substring(2, 10);
         window.location.href = window.location.pathname + "?room=" + randomCode;
     }
 
-    // Invite link copy karna
+    function selectGender(gender) {
+        selectedGender = gender;
+        document.getElementById('btn-male').classList.toggle('selected', gender === 'Male');
+        document.getElementById('btn-female').classList.toggle('selected', gender === 'Female');
+    }
+
+    function enterChat() {
+        const inputVal = document.getElementById('username-input').value.trim();
+        const errorDiv = document.getElementById('name-error');
+
+        if (inputVal.length < 5 || !selectedGender) {
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        errorDiv.style.display = 'none';
+        myName = inputVal;
+
+        document.getElementById('name-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.getElementById('copy-invite-btn').style.display = 'block';
+
+        socket.emit('join room', { roomId: roomId, username: myName, gender: selectedGender });
+    }
+
+    document.getElementById('username-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') enterChat();
+    });
+
     function copyInviteLink() {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            alert("Invite Link copy ho gaya hai! Ab ise apne dost ko WhatsApp par paste karke bhej dein.");
+            alert("Invite Link copy ho gaya hai! Ab ise apne dost ko bhej dein.");
         }).catch(() => {
             prompt("Is link ko copy karke dost ko bhejein:", window.location.href);
         });
     }
 
-    // Room mein kaun-kaun online hai dikhana
     socket.on('room users', (users) => {
-        const names = users.map(u => u.name).join(', ');
-        document.getElementById('header-subtitle').innerText = "Online: " + names;
+        const others = users.filter(u => u.id !== socket.id);
+        const subtitle = document.getElementById('header-subtitle');
+        if (others.length > 0) {
+            subtitle.innerText = others.map(u => `${u.name} (${u.gender})`).join(', ') + " • Online";
+            subtitle.style.color = "#d9fdd3";
+        } else {
+            subtitle.innerText = "Dost Offline hai (Waiting...)";
+            subtitle.style.color = "#ffcccb";
+        }
     });
 
-    // Message bhejna
+    socket.on('system status', (msg) => {
+        const messagesDiv = document.getElementById('messages');
+        const pill = document.createElement('div');
+        pill.className = 'status-pill';
+        pill.innerText = msg;
+        messagesDiv.appendChild(pill);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
     document.getElementById('chat-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const input = document.getElementById('msg-input');
         if (input.value.trim()) {
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            socket.emit('room message', { text: input.value, time: time });
+            const msgId = "msg_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+            socket.emit('room message', { msgId: msgId, text: input.value, time: time });
             input.value = '';
         }
     });
 
-    // Message receive karna
     socket.on('room message', (data) => {
         const messagesDiv = document.getElementById('messages');
         const div = document.createElement('div');
@@ -129,12 +192,27 @@
         div.className = 'message ' + (isMe ? 'sent' : 'received');
 
         div.innerHTML = `
-            ${!isMe ? `<span class="sender-name">${data.senderName}</span>` : ''}
+            ${!isMe ? `<span class="sender-name">${data.senderName} (${data.senderGender})</span>` : ''}
             <span>${data.text}</span>
-            <span class="timestamp">${data.time}</span>
+            <span class="meta-info">
+                <span class="timestamp">${data.time}</span>
+                ${isMe ? `<span class="ticks" id="tick-${data.msgId}">✓</span>` : ''}
+            </span>
         `;
         messagesDiv.appendChild(div);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        if (!isMe) {
+            socket.emit('message seen', { msgId: data.msgId });
+        }
+    });
+
+    socket.on('message seen', ({ msgId }) => {
+        const tickEl = document.getElementById(`tick-${msgId}`);
+        if (tickEl) {
+            tickEl.innerText = "✓✓";
+            tickEl.classList.add("seen");
+        }
     });
 </script>
 </body>
