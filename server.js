@@ -11,9 +11,9 @@ const io = new Server(server, {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Registered users aur online sockets track karne ke liye
-const users = {};       // userId -> { id, name, gender, online, socketId }
-const connections = {}; // userId -> Set of connected friend userIds
+const users = {};          // userId -> { id, name, gender, online, socketId }
+const connections = {};    // userId -> Set of friend userIds
+const pendingMessages = {}; // receiverId -> Array of unread/offline messages
 
 io.on('connection', (socket) => {
     socket.on('register', ({ userId, name, gender, inviteFrom }) => {
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
         if (!connections[userId]) connections[userId] = new Set();
 
-        // Agar invite link se aaya hai toh dono ko ek doosre ki list mein jodein
+        // Invite link se judne par dono ko ek-doosre ki list mein add karein
         if (inviteFrom && inviteFrom !== userId && users[inviteFrom]) {
             connections[userId].add(inviteFrom);
             connections[inviteFrom].add(userId);
@@ -39,6 +39,14 @@ io.on('connection', (socket) => {
 
         sendContactList(userId);
         notifyContacts(userId);
+
+        // Agar offline rehne par koi message aaya tha toh turant deliver karein
+        if (pendingMessages[userId] && pendingMessages[userId].length > 0) {
+            pendingMessages[userId].forEach(msg => {
+                socket.emit('private message', msg);
+            });
+            pendingMessages[userId] = [];
+        }
     });
 
     function getContactsFor(uid) {
@@ -71,11 +79,23 @@ io.on('connection', (socket) => {
         }
     }
 
-    // Personal 1-to-1 Message / Photo / Video
+    // Message bhejna + Automatically dono ko ek-doosre ki list mein add karna
     socket.on('private message', ({ toUserId, msgId, text, mediaData, mediaType, time }) => {
         const sender = users[socket.userId];
-        const receiver = users[toUserId];
-        if (!sender) return;
+        if (!sender || !toUserId) return;
+
+        if (!connections[sender.id]) connections[sender.id] = new Set();
+        if (!connections[toUserId]) connections[toUserId] = new Set();
+
+        // Agar pehle se list mein nahi the toh ab dono ki list mein add kar dein
+        const isNewForReceiver = !connections[toUserId].has(sender.id);
+        connections[sender.id].add(toUserId);
+        connections[toUserId].add(sender.id);
+
+        if (isNewForReceiver) {
+            sendContactList(toUserId);
+            sendContactList(sender.id);
+        }
 
         const payload = {
             msgId,
@@ -89,15 +109,17 @@ io.on('connection', (socket) => {
             time
         };
 
-        // Receiver ko bhejein
+        const receiver = users[toUserId];
         if (receiver && receiver.online && receiver.socketId) {
             io.to(receiver.socketId).emit('private message', payload);
+        } else {
+            if (!pendingMessages[toUserId]) pendingMessages[toUserId] = [];
+            pendingMessages[toUserId].push(payload);
         }
-        // Sender ko confirm karein
+
         socket.emit('private message', payload);
     });
 
-    // Seen receipt (Blue Tick)
     socket.on('message seen', ({ toUserId, msgId }) => {
         const receiver = users[toUserId];
         if (receiver && receiver.online && receiver.socketId) {
