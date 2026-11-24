@@ -2,50 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Welcome to Zip</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
-        body { background: linear-gradient(135deg, #00a884, #005c4b); display: flex; justify-content: center; align-items: center; height: 100vh; padding: 10px; }
-        .app-container { width: 100%; max-width: 480px; height: 94vh; background: #efeae2; display: flex; flex-direction: column; box-shadow: 0 12px 32px rgba(0,0,0,0.28); border-radius: 18px; overflow: hidden; position: relative; }
-        .header { background: linear-gradient(90deg, #008069, #006d59); color: white; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; z-index: 10; }
+        html, body { width: 100%; height: 100dvh; background: #efeae2; margin: 0; padding: 0; overflow: hidden; }
+        .app-container { width: 100%; height: 100dvh; background: #efeae2; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        /* Header */
+        .header { background: linear-gradient(90deg, #008069, #006d59); color: white; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 10; }
         .header-left { display: flex; align-items: center; gap: 11px; }
         .avatar { width: 42px; height: 42px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; }
         .header-info h3 { font-size: 16px; font-weight: 700; }
         .header-info p { font-size: 11.5px; color: #d9fdd3; margin-top: 2px; }
         .header-actions { display: flex; align-items: center; gap: 8px; }
-        .icon-btn { background: rgba(255,255,255,0.18); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 16px; cursor: pointer; }
-        .invite-btn { background-color: #25d366; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 11.5px; font-weight: bold; cursor: pointer; }
-        .center-screen { flex: 1; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px; text-align: center; gap: 15px; }
-        .logo-badge { width: 72px; height: 72px; background: linear-gradient(135deg, #25d366, #008069); border-radius: 22px; display: flex; justify-content: center; align-items: center; font-size: 36px; color: white; }
-        .name-input { width: 100%; max-width: 280px; padding: 13px; border: 2px solid #008069; border-radius: 12px; font-size: 15px; outline: none; text-align: center; }
-        .gender-group { display: flex; gap: 12px; width: 100%; max-width: 280px; }
-        .gender-btn { flex: 1; padding: 12px; border: 2px solid #cfd8dc; background: #fff; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .icon-btn { background: rgba(255,255,255,0.18); color: white; border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .invite-btn { background-color: #25d366; color: white; border: none; padding: 8px 13px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        /* Welcome & Name Screens */
+        .center-screen { flex: 1; width: 100%; background: linear-gradient(180deg, #ffffff 0%, #f4f7f6 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; gap: 16px; }
+        .logo-badge { width: 76px; height: 76px; background: linear-gradient(135deg, #25d366, #008069); border-radius: 22px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: white; box-shadow: 0 8px 20px rgba(0,128,105,0.25); }
+        .center-screen h2 { color: #111b21; font-size: 22px; font-weight: 700; }
+        .center-screen p { color: #54656f; font-size: 14.5px; line-height: 1.5; max-width: 310px; }
+        .name-input { width: 100%; max-width: 300px; padding: 14px; border: 2px solid #008069; border-radius: 12px; font-size: 16px; outline: none; text-align: center; background: #fff; }
+        .gender-group { display: flex; gap: 12px; width: 100%; max-width: 300px; }
+        .gender-btn { flex: 1; padding: 13px; border: 2px solid #cfd8dc; background: #fff; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
         .gender-btn.selected { border-color: #008069; background: #d9fdd3; color: #008069; }
         .error-text { color: #e53935; font-size: 13px; font-weight: 600; display: none; }
-        .action-btn { background: linear-gradient(90deg, #00a884, #008069); color: white; border: none; padding: 14px 30px; border-radius: 28px; font-size: 15px; font-weight: 700; cursor: pointer; }
-        .chat-screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
-        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 18px 18px; }
-        .status-pill { align-self: center; background: #fff; color: #54656f; font-size: 11.5px; padding: 5px 14px; border-radius: 14px; }
-        .message { max-width: 78%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.12); word-wrap: break-word; }
+        .action-btn { background: linear-gradient(90deg, #00a884, #008069); color: white; border: none; padding: 15px 32px; border-radius: 28px; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,128,105,0.3); }
+
+        /* Chat Area */
+        .chat-screen { flex: 1; width: 100%; display: none; flex-direction: column; overflow: hidden; }
+        .messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 18px 18px; }
+        .status-pill { align-self: center; background: rgba(255,255,255,0.92); color: #54656f; font-size: 11.5px; padding: 5px 14px; border-radius: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+        .message { max-width: 80%; padding: 9px 13px; border-radius: 12px; font-size: 15px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.12); word-wrap: break-word; }
         .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 2px; }
         .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 2px; }
-        .sender-name { font-size: 11px; font-weight: 700; color: #008069; margin-bottom: 4px; display: block; }
-        .chat-media { max-width: 100%; max-height: 240px; border-radius: 8px; margin: 4px 0; display: block; }
+        .sender-name { font-size: 11.5px; font-weight: 700; color: #008069; margin-bottom: 4px; display: block; }
+        .chat-media { max-width: 100%; max-height: 250px; border-radius: 8px; margin: 4px 0; display: block; }
         .meta-info { float: right; margin-left: 10px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
         .timestamp { font-size: 10px; color: #667781; }
         .ticks { font-size: 11px; font-weight: bold; color: #8696a0; }
         .ticks.seen { color: #53bdeb; }
-        .input-area { background: #f0f2f5; padding: 10px 12px; display: flex; gap: 8px; align-items: center; }
-        .attach-btn { background: #fff; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 19px; }
-        .input-area input[type="text"] { flex: 1; padding: 12px 16px; border: none; border-radius: 24px; outline: none; font-size: 15px; }
-        .send-btn { background: #008069; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; }
-        .call-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11,20,26,0.96); z-index: 50; display: none; flex-direction: column; justify-content: space-between; align-items: center; padding: 30px 20px; color: white; }
+
+        /* Input Area */
+        .input-area { background: #f0f2f5; padding: 10px 12px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #e0e0e0; }
+        .attach-btn { background: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; justify-content: center; align-items: center; }
+        .input-area input[type="text"] { flex: 1; padding: 12px 16px; border: none; border-radius: 24px; outline: none; font-size: 15px; background: #fff; }
+        .send-btn { background: #008069; color: white; border: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+
+        /* Call Screen */
+        .call-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100dvh; background: rgba(11,20,26,0.97); z-index: 50; display: none; flex-direction: column; justify-content: space-between; align-items: center; padding: 30px 20px; color: white; }
         .video-grid { width: 100%; flex: 1; position: relative; margin: 15px 0; border-radius: 16px; overflow: hidden; background: #1f2c34; }
         #remote-video { width: 100%; height: 100%; object-fit: cover; }
         #local-video { width: 110px; height: 150px; object-fit: cover; position: absolute; bottom: 12px; right: 12px; border-radius: 12px; border: 2px solid #25d366; }
         .call-controls { display: flex; gap: 25px; }
-        .call-action-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; color: white; cursor: pointer; }
+        .call-action-btn { width: 62px; height: 62px; border-radius: 50%; border: none; font-size: 24px; color: white; cursor: pointer; }
         .btn-accept { background: #25d366; }
         .btn-reject { background: #e53935; }
     </style>
@@ -61,9 +73,9 @@
             </div>
         </div>
         <div class="header-actions" id="chat-header-actions" style="display: none;">
-            <button class="icon-btn" id="voice-call-btn">📞</button>
-            <button class="icon-btn" id="video-call-btn">📹</button>
-            <button class="invite-btn" id="copy-invite-btn">+ Invite</button>
+            <button type="button" class="icon-btn" id="voice-call-btn">📞</button>
+            <button type="button" class="icon-btn" id="video-call-btn">📹</button>
+            <button type="button" class="invite-btn" id="copy-invite-btn">+ Invite</button>
         </div>
     </div>
 
@@ -284,283 +296,6 @@
 
     document.getElementById('end-call-btn').addEventListener('click', () => endCall(true));
     socket.on('call-ended', () => endCall(false));
-</script>
-</body>
-</html>
-ut type="file" id="media-input" accept="image/*,video/*" style="display: none;" onchange="sendMedia(event)" />
-            <button type="button" class="attach-btn" title="Send Photo or Video" onclick="document.getElementById('media-input').click()">📎</button>
-            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" />
-            <button type="submit" class="send-btn">➤</button>
-        </form>
-    </div>
-
-    <!-- Screen 4: Voice / Video Call Overlay -->
-    <div class="call-overlay" id="call-overlay">
-        <div class="call-header">
-            <h3 id="call-title">Calling...</h3>
-            <p id="call-status">Connecting...</p>
-        </div>
-        <div class="video-grid" id="video-grid">
-            <video id="remote-video" autoplay playsinline></video>
-            <video id="local-video" autoplay playsinline muted></video>
-        </div>
-        <div class="call-controls">
-            <button class="call-action-btn btn-accept" id="accept-call-btn" style="display: none;" onclick="acceptIncomingCall()">📞</button>
-            <button class="call-action-btn btn-reject" onclick="endCall(true)">📵</button>
-        </div>
-    </div>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io();
-    const urlParams = new URLSearchParams(window.location.search);
-    const roomId = urlParams.get('room');
-    let myName = "";
-    let selectedGender = "";
-
-    // WebRTC Variables
-    let localStream = null;
-    let peerConnection = null;
-    let pendingOffer = null;
-    let currentCallType = 'video';
-    const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
-
-    if (roomId) {
-        document.getElementById('lock-screen').style.display = 'none';
-        document.getElementById('name-screen').style.display = 'flex';
-    }
-
-    function createNewRoom() {
-        const randomCode = Math.random().toString(36).substring(2, 10);
-        window.location.href = window.location.pathname + "?room=" + randomCode;
-    }
-
-    function selectGender(gender) {
-        selectedGender = gender;
-        document.getElementById('btn-male').classList.toggle('selected', gender === 'Male');
-        document.getElementById('btn-female').classList.toggle('selected', gender === 'Female');
-    }
-
-    function enterChat() {
-        const inputVal = document.getElementById('username-input').value.trim();
-        const errorDiv = document.getElementById('name-error');
-
-        if (inputVal.length < 5 || !selectedGender) {
-            errorDiv.style.display = 'block';
-            return;
-        }
-
-        errorDiv.style.display = 'none';
-        myName = inputVal;
-
-        document.getElementById('name-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('chat-header-actions').style.display = 'flex';
-
-        socket.emit('join room', { roomId: roomId, username: myName, gender: selectedGender });
-    }
-
-    document.getElementById('username-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') enterChat();
-    });
-
-    function copyInviteLink() {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            alert("Invite Link copy ho gaya hai! Ab ise apne dost ko WhatsApp par bhej dein.");
-        }).catch(() => {
-            prompt("Is link ko copy karke dost ko bhejein:", window.location.href);
-        });
-    }
-
-    socket.on('room users', (users) => {
-        const others = users.filter(u => u.id !== socket.id);
-        const subtitle = document.getElementById('header-subtitle');
-        if (others.length > 0) {
-            subtitle.innerText = others.map(u => `${u.name} (${u.gender})`).join(', ') + " • Online";
-            subtitle.style.color = "#d9fdd3";
-        } else {
-            subtitle.innerText = "Dost Offline hai (Waiting...)";
-            subtitle.style.color = "#ffcccb";
-        }
-    });
-
-    socket.on('system status', (msg) => {
-        const messagesDiv = document.getElementById('messages');
-        const pill = document.createElement('div');
-        pill.className = 'status-pill';
-        pill.innerText = msg;
-        messagesDiv.appendChild(pill);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
-
-    // Text Message bhejna
-    document.getElementById('chat-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const input = document.getElementById('msg-input');
-        if (input.value.trim()) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const msgId = "msg_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-            socket.emit('room message', { msgId: msgId, text: input.value, time: time });
-            input.value = '';
-        }
-    });
-
-    // Photo ya Video bhejna
-    function sendMedia(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        if (file.size > 20 * 1024 * 1024) {
-            alert("File bahut badi hai! Kripya 20MB se chhoti photo ya video chunein.");
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const msgId = "msg_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-            const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
-
-            socket.emit('room message', {
-                msgId: msgId,
-                mediaData: e.target.result,
-                mediaType: mediaType,
-                time: time
-            });
-        };
-        reader.readAsDataURL(file);
-        event.target.value = "";
-    }
-
-    // Message / Media receive karna
-    socket.on('room message', (data) => {
-        const messagesDiv = document.getElementById('messages');
-        const div = document.createElement('div');
-        const isMe = data.senderId === socket.id;
-        div.className = 'message ' + (isMe ? 'sent' : 'received');
-
-        let mediaHtml = "";
-        if (data.mediaData) {
-            if (data.mediaType === 'video') {
-                mediaHtml = `<video src="${data.mediaData}" controls class="chat-media"></video>`;
-            } else {
-                mediaHtml = `<img src="${data.mediaData}" class="chat-media" />`;
-            }
-        }
-
-        div.innerHTML = `
-            ${!isMe ? `<span class="sender-name">${data.senderName} (${data.senderGender})</span>` : ''}
-            ${mediaHtml}
-            ${data.text ? `<span>${data.text}</span>` : ''}
-            <span class="meta-info">
-                <span class="timestamp">${data.time}</span>
-                ${isMe ? `<span class="ticks" id="tick-${data.msgId}">✓</span>` : ''}
-            </span>
-        `;
-        messagesDiv.appendChild(div);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-        if (!isMe) {
-            socket.emit('message seen', { msgId: data.msgId });
-        }
-    });
-
-    socket.on('message seen', ({ msgId }) => {
-        const tickEl = document.getElementById(`tick-${msgId}`);
-        if (tickEl) {
-            tickEl.innerText = "✓✓";
-            tickEl.classList.add("seen");
-        }
-    });
-
-    // --- VOICE & VIDEO CALL LOGIC ---
-    async function setupMediaAndPeer(type) {
-        currentCallType = type;
-        localStream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: type === 'video'
-        });
-        document.getElementById('local-video').srcObject = localStream;
-        document.getElementById('local-video').style.display = type === 'video' ? 'block' : 'none';
-
-        peerConnection = new RTCPeerConnection(rtcConfig);
-        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-        peerConnection.ontrack = (event) => {
-            document.getElementById('remote-video').srcObject = event.streams[0];
-        };
-
-        peerConnection.onicecandidate = (event) => {
-            if (event.candidate) {
-                socket.emit('ice-candidate', { candidate: event.candidate });
-            }
-        };
-    }
-
-    async function startCall(type) {
-        try {
-            document.getElementById('call-overlay').style.display = 'flex';
-            document.getElementById('call-title').innerText = type === 'video' ? "Video Calling..." : "Voice Calling...";
-            document.getElementById('call-status').innerText = "Ringing...";
-            document.getElementById('accept-call-btn').style.display = 'none';
-
-            await setupMediaAndPeer(type);
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            socket.emit('call-user', { offer, callType: type });
-        } catch (err) {
-            alert("Camera ya Microphone ki permission nahi mili!");
-            endCall(false);
-        }
-    }
-
-    socket.on('incoming-call', ({ offer, callType, callerName }) => {
-        pendingOffer = offer;
-        currentCallType = callType;
-        document.getElementById('call-overlay').style.display = 'flex';
-        document.getElementById('call-title').innerText = callerName;
-        document.getElementById('call-status').innerText = callType === 'video' ? "Incoming Video Call..." : "Incoming Voice Call...";
-        document.getElementById('accept-call-btn').style.display = 'flex';
-    });
-
-    async function acceptIncomingCall() {
-        try {
-            document.getElementById('accept-call-btn').style.display = 'none';
-            document.getElementById('call-status').innerText = "Connected";
-
-            await setupMediaAndPeer(currentCallType);
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(pendingOffer));
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
-            socket.emit('ans document.getElementById('messages');
-        const div = document.createElement('div');
-        const isMe = data.senderId === socket.id;
-        div.className = 'message ' + (isMe ? 'sent' : 'received');
-
-        div.innerHTML = `
-            ${!isMe ? `<span class="sender-name">${data.senderName} (${data.senderGender})</span>` : ''}
-            <span>${data.text}</span>
-            <span class="meta-info">
-                <span class="timestamp">${data.time}</span>
-                ${isMe ? `<span class="ticks" id="tick-${data.msgId}">✓</span>` : ''}
-            </span>
-        `;
-        messagesDiv.appendChild(div);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-        if (!isMe) {
-            socket.emit('message seen', { msgId: data.msgId });
-        }
-    });
-
-    socket.on('message seen', ({ msgId }) => {
-        const tickEl = document.getElementById(`tick-${msgId}`);
-        if (tickEl) {
-            tickEl.innerText = "✓✓";
-            tickEl.classList.add("seen");
-        }
-    });
 </script>
 </body>
 </html>
