@@ -5,98 +5,146 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-// Photo aur video bhejne ke liye 25MB limit set ki gayi hai
 const io = new Server(server, {
     maxHttpBufferSize: 25 * 1024 * 1024
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const rooms = {};
+// Registered users aur online sockets track karne ke liye
+const users = {};       // userId -> { id, name, gender, online, socketId }
+const connections = {}; // userId -> Set of connected friend userIds
 
 io.on('connection', (socket) => {
-    socket.on('join room', ({ roomId, username, gender }) => {
-        if (!roomId || !username || username.trim().length < 5 || !gender) return;
+    socket.on('register', ({ userId, name, gender, inviteFrom }) => {
+        if (!userId || !name || name.trim().length < 5 || !gender) return;
 
-        socket.join(roomId);
-        socket.roomId = roomId;
-        socket.username = username.trim();
-        socket.gender = gender;
+        socket.userId = userId;
+        users[userId] = {
+            id: userId,
+            name: name.trim(),
+            gender: gender,
+            online: true,
+            socketId: socket.id
+        };
 
-        if (!rooms[roomId]) rooms[roomId] = [];
-        rooms[roomId] = rooms[roomId].filter(u => u.id !== socket.id);
-        rooms[roomId].push({ id: socket.id, name: socket.username, gender: socket.gender });
+        if (!connections[userId]) connections[userId] = new Set();
 
-        io.to(roomId).emit('room users', rooms[roomId]);
-        socket.to(roomId).emit('system status', `${socket.username} (${socket.gender}) is Online`);
+        // Agar invite link se aaya hai toh dono ko ek doosre ki list mein jodein
+        if (inviteFrom && inviteFrom !== userId && users[inviteFrom]) {
+            connections[userId].add(inviteFrom);
+            connections[inviteFrom].add(userId);
+            sendContactList(inviteFrom);
+        }
+
+        sendContactList(userId);
+        notifyContacts(userId);
     });
 
-    // Text, Photo ya Video message bhejne ke liye
-    socket.on('room message', ({ msgId, text, mediaData, mediaType, time }) => {
-        if (socket.roomId && socket.username) {
-            io.to(socket.roomId).emit('room message', {
-                msgId: msgId,
-                senderId: socket.id,
-                senderName: socket.username,
-                senderGender: socket.gender,
-                text: text || "",
-                mediaData: mediaData || null,
-                mediaType: mediaType || null,
-                time: time
+    function getContactsFor(uid) {
+        const list = [];
+        if (connections[uid]) {
+            connections[uid].forEach(friendId => {
+                if (users[friendId]) {
+                    list.push({
+                        id: users[friendId].id,
+                        name: users[friendId].name,
+                        gender: users[friendId].gender,
+                        online: users[friendId].online
+                    });
+                }
+            });
+        }
+        return list;
+    }
+
+    function sendContactList(uid) {
+        const u = users[uid];
+        if (u && u.online && u.socketId) {
+            io.to(u.socketId).emit('contact list', getContactsFor(uid));
+        }
+    }
+
+    function notifyContacts(uid) {
+        if (connections[uid]) {
+            connections[uid].forEach(friendId => sendContactList(friendId));
+        }
+    }
+
+    // Personal 1-to-1 Message / Photo / Video
+    socket.on('private message', ({ toUserId, msgId, text, mediaData, mediaType, time }) => {
+        const sender = users[socket.userId];
+        const receiver = users[toUserId];
+        if (!sender) return;
+
+        const payload = {
+            msgId,
+            fromUserId: sender.id,
+            toUserId,
+            senderName: sender.name,
+            senderGender: sender.gender,
+            text: text || "",
+            mediaData: mediaData || null,
+            mediaType: mediaType || null,
+            time
+        };
+
+        // Receiver ko bhejein
+        if (receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('private message', payload);
+        }
+        // Sender ko confirm karein
+        socket.emit('private message', payload);
+    });
+
+    // Seen receipt (Blue Tick)
+    socket.on('message seen', ({ toUserId, msgId }) => {
+        const receiver = users[toUserId];
+        if (receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('message seen', { fromUserId: socket.userId, msgId });
+        }
+    });
+
+    // Voice & Video Call Signaling
+    socket.on('call-user', ({ toUserId, offer, callType }) => {
+        const sender = users[socket.userId];
+        const receiver = users[toUserId];
+        if (sender && receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('incoming-call', {
+                fromUserId: sender.id,
+                callerName: sender.name,
+                offer,
+                callType
             });
         }
     });
 
-    // Seen receipt
-    socket.on('message seen', ({ msgId }) => {
-        if (socket.roomId) {
-            socket.to(socket.roomId).emit('message seen', { msgId });
+    socket.on('answer-call', ({ toUserId, answer }) => {
+        const receiver = users[toUserId];
+        if (receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('call-answered', { answer });
         }
     });
 
-    // Voice / Video Call Signaling (WebRTC)
-    socket.on('call-user', ({ offer, callType }) => {
-        if (socket.roomId) {
-            socket.to(socket.roomId).emit('incoming-call', {
-                offer: offer,
-                callType: callType,
-                callerName: socket.username
-            });
+    socket.on('ice-candidate', ({ toUserId, candidate }) => {
+        const receiver = users[toUserId];
+        if (receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('ice-candidate', { candidate });
         }
     });
 
-    socket.on('answer-call', ({ answer }) => {
-        if (socket.roomId) {
-            socket.to(socket.roomId).emit('call-answered', { answer });
-        }
-    });
-
-    socket.on('ice-candidate', ({ candidate }) => {
-        if (socket.roomId) {
-            socket.to(socket.roomId).emit('ice-candidate', { candidate });
-        }
-    });
-
-    socket.on('end-call', () => {
-        if (socket.roomId) {
-            socket.to(socket.roomId).emit('call-ended');
+    socket.on('end-call', ({ toUserId }) => {
+        const receiver = users[toUserId];
+        if (receiver && receiver.online && receiver.socketId) {
+            io.to(receiver.socketId).emit('call-ended');
         }
     });
 
     socket.on('disconnect', () => {
-        const roomId = socket.roomId;
-        const leftUser = socket.username;
-        const leftGender = socket.gender;
-        if (roomId && rooms[roomId]) {
-            rooms[roomId] = rooms[roomId].filter(u => u.id !== socket.id);
-            io.to(roomId).emit('room users', rooms[roomId]);
-            if (leftUser) {
-                io.to(roomId).emit('system status', `${leftUser} (${leftGender}) went Offline`);
-                io.to(roomId).emit('call-ended');
-            }
-            if (rooms[roomId].length === 0) {
-                delete rooms[roomId];
-            }
+        const uid = socket.userId;
+        if (uid && users[uid]) {
+            users[uid].online = false;
+            notifyContacts(uid);
         }
     });
 });
