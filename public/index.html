@@ -3,51 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zip Private Chat</title>
+    <title>Welcome to Zip</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #d1d7db; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .app-container { width: 100%; max-width: 500px; height: 92vh; background: #efeae2; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: linear-gradient(135deg, #00a884 0%, #005c4b 100%); display: flex; justify-content: center; align-items: center; height: 100vh; padding: 10px; }
+        .app-container { width: 100%; max-width: 480px; height: 94vh; background: #efeae2; display: flex; flex-direction: column; box-shadow: 0 12px 32px rgba(0,0,0,0.28); border-radius: 18px; overflow: hidden; position: relative; }
         
         /* Header */
-        .header { background-color: #008069; color: white; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: #dfe5e7; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #008069; font-weight: bold; }
-        .header-info h3 { font-size: 16px; font-weight: 600; }
-        .header-info p { font-size: 12px; color: #d9fdd3; }
-        .invite-btn { background-color: #25d366; color: white; border: none; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .header { background: linear-gradient(90deg, #008069, #006d59); color: white; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.15); z-index: 10; }
+        .header-left { display: flex; align-items: center; gap: 11px; }
+        .avatar { width: 42px; height: 42px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #ffffff; font-weight: bold; font-size: 18px; }
+        .header-info h3 { font-size: 16px; font-weight: 700; letter-spacing: 0.3px; }
+        .header-info p { font-size: 11.5px; color: #d9fdd3; margin-top: 2px; }
+        
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+        .icon-btn { background: rgba(255,255,255,0.18); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(255,255,255,0.32); transform: scale(1.05); }
+        .invite-btn { background-color: #25d366; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 11.5px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        /* Lock & Name Entry Screens */
-        .center-screen { flex: 1; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 25px; text-align: center; gap: 14px; }
-        .center-screen h2 { color: #111b21; font-size: 20px; }
-        .center-screen p { color: #667781; font-size: 14px; line-height: 1.5; }
-        .name-input { width: 100%; max-width: 280px; padding: 12px 15px; border: 2px solid #008069; border-radius: 8px; font-size: 15px; outline: none; text-align: center; }
+        /* Welcome / Lock & Name Screens */
+        .center-screen { flex: 1; background: linear-gradient(180deg, #ffffff 0%, #f4f7f6 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 28px; text-align: center; gap: 15px; }
+        .logo-badge { width: 76px; height: 76px; background: linear-gradient(135deg, #25d366, #008069); border-radius: 24px; display: flex; justify-content: center; align-items: center; font-size: 38px; color: white; box-shadow: 0 8px 20px rgba(0,128,105,0.3); }
+        .center-screen h2 { color: #111b21; font-size: 22px; font-weight: 700; }
+        .center-screen p { color: #54656f; font-size: 14px; line-height: 1.5; max-width: 300px; }
+        .name-input { width: 100%; max-width: 290px; padding: 13px 16px; border: 2px solid #008069; border-radius: 12px; font-size: 15px; outline: none; text-align: center; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
         
         /* Gender Selection */
-        .gender-group { display: flex; gap: 12px; width: 100%; max-width: 280px; justify-content: center; }
-        .gender-btn { flex: 1; padding: 11px; border: 2px solid #cfd8dc; background: #f8f9fa; border-radius: 8px; font-size: 14px; font-weight: 600; color: #37474f; cursor: pointer; transition: 0.2s; }
-        .gender-btn.selected { border-color: #008069; background-color: #d9fdd3; color: #008069; }
+        .gender-group { display: flex; gap: 12px; width: 100%; max-width: 290px; justify-content: center; }
+        .gender-btn { flex: 1; padding: 12px; border: 2px solid #cfd8dc; background: #ffffff; border-radius: 12px; font-size: 14px; font-weight: 600; color: #37474f; cursor: pointer; transition: 0.2s; }
+        .gender-btn.selected { border-color: #008069; background-color: #d9fdd3; color: #008069; box-shadow: 0 3px 8px rgba(0,128,105,0.18); }
 
         .error-text { color: #e53935; font-size: 13px; font-weight: 600; display: none; }
-        .action-btn { background-color: #008069; color: white; border: none; padding: 13px 26px; border-radius: 25px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+        .action-btn { background: linear-gradient(90deg, #00a884, #008069); color: white; border: none; padding: 14px 30px; border-radius: 28px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px; box-shadow: 0 4px 12px rgba(0,128,105,0.3); transition: 0.2s; }
+        .action-btn:hover { transform: translateY(-1px); }
 
         /* Chat Screen */
         .chat-screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
-        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
-        .status-pill { align-self: center; background: #e1f3fb; color: #54656f; font-size: 11.5px; padding: 4px 12px; border-radius: 12px; margin: 4px 0; }
-        .message { max-width: 78%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
-        .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
-        .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
-        .sender-name { font-size: 11px; font-weight: bold; color: #008069; margin-bottom: 3px; display: block; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 18px 18px; }
+        .status-pill { align-self: center; background: rgba(255,255,255,0.9); color: #54656f; font-size: 11.5px; padding: 5px 14px; border-radius: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); margin: 4px 0; }
+        .message { max-width: 78%; padding: 8px 12px; border-radius: 12px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.12); word-wrap: break-word; }
+        .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 2px; }
+        .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 2px; }
+        .sender-name { font-size: 11px; font-weight: 700; color: #008069; margin-bottom: 4px; display: block; }
+        
+        /* Media inside chat */
+        .chat-media { max-width: 100%; max-height: 240px; border-radius: 8px; margin-top: 4px; margin-bottom: 4px; display: block; }
+
         .meta-info { float: right; margin-left: 10px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
         .timestamp { font-size: 10px; color: #667781; }
         .ticks { font-size: 11px; font-weight: bold; color: #8696a0; }
         .ticks.seen { color: #53bdeb; }
 
         /* Input Area */
-        .input-area { background-color: #f0f2f5; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
-        .input-area input { flex: 1; padding: 12px 15px; border: none; border-radius: 24px; outline: none; font-size: 15px; }
-        .input-area button { background-color: #008069; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+        .input-area { background-color: #f0f2f5; padding: 10px 12px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #e0e0e0; }
+        .attach-btn { background: #ffffff; color: #54656f; border: none; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 19px; display: flex; justify-content: center; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .input-area input[type="text"] { flex: 1; padding: 12px 16px; border: none; border-radius: 24px; outline: none; font-size: 15px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+        .send-btn { background: linear-gradient(135deg, #00a884, #008069); color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 6px rgba(0,128,105,0.3); }
+
+        /* Call Overlay Screen */
+        .call-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 20, 26, 0.96); z-index: 50; display: none; flex-direction: column; justify-content: space-between; align-items: center; padding: 30px 20px; color: white; }
+        .call-header { text-align: center; margin-top: 10px; }
+        .call-header h3 { font-size: 22px; margin-bottom: 6px; }
+        .call-header p { font-size: 14px; color: #25d366; }
+        .video-grid { width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; margin: 15px 0; border-radius: 16px; overflow: hidden; background: #1f2c34; }
+        #remote-video { width: 100%; height: 100%; object-fit: cover; }
+        #local-video { width: 110px; height: 150px; object-fit: cover; position: absolute; bottom: 12px; right: 12px; border-radius: 12px; border: 2px solid #25d366; background: #000; }
+        .call-controls { display: flex; gap: 25px; margin-bottom: 15px; }
+        .call-action-btn { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 24px; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .btn-accept { background-color: #25d366; }
+        .btn-reject { background-color: #e53935; }
     </style>
 </head>
 <body>
@@ -55,28 +79,32 @@
 <div class="app-container">
     <div class="header">
         <div class="header-left">
-            <div class="avatar">🔒</div>
+            <div class="avatar">⚡</div>
             <div class="header-info">
-                <h3 id="header-title">Zip Private</h3>
-                <p id="header-subtitle">Invite Only Chat</p>
+                <h3>Welcome to Zip</h3>
+                <p id="header-subtitle">Private Invite Chat</p>
             </div>
         </div>
-        <button class="invite-btn" id="copy-invite-btn" style="display: none;" onclick="copyInviteLink()">+ Invite Link</button>
+        <div class="header-actions" id="chat-header-actions" style="display: none;">
+            <button class="icon-btn" title="Voice Call" onclick="startCall('audio')">📞</button>
+            <button class="icon-btn" title="Video Call" onclick="startCall('video')">📹</button>
+            <button class="invite-btn" onclick="copyInviteLink()">+ Invite</button>
+        </div>
     </div>
 
-    <!-- Screen 1: Lock Screen -->
+    <!-- Screen 1: Welcome / Lock Screen -->
     <div class="center-screen" id="lock-screen">
-        <div style="font-size: 48px;">🔐</div>
-        <h2>Private Chat Room</h2>
-        <p>Sirf invite link wale log hi is chat mein jud sakte hain.</p>
+        <div class="logo-badge">⚡</div>
+        <h2>Welcome to Zip</h2>
+        <p>Surakshit Private Chat, Photo/Video Sharing aur Live Call. Naya room banayein aur link apne dost ko bhejein.</p>
         <button class="action-btn" onclick="createNewRoom()">Naya Private Chat Banayein</button>
     </div>
 
     <!-- Screen 2: Mandatory 5-Letter Name & Gender Entry -->
     <div class="center-screen" id="name-screen" style="display: none;">
-        <div style="font-size: 40px;">👤</div>
-        <h2>Enter your 5 word name</h2>
-        <p>Chat mein jaane ke liye 5 akshar ka naam likhein aur Gender chunein.</p>
+        <div class="logo-badge">👤</div>
+        <h2>Welcome to Zip</h2>
+        <p>Enter your 5 word name aur apna Gender chunein:</p>
         <input type="text" id="username-input" class="name-input" placeholder="Enter your 5 word name" autocomplete="off" />
         
         <div class="gender-group">
@@ -92,9 +120,27 @@
     <div class="chat-screen" id="chat-screen">
         <div class="messages" id="messages"></div>
         <form class="input-area" id="chat-form">
-            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" required />
-            <button type="submit">➤</button>
+            <input type="file" id="media-input" accept="image/*,video/*" style="display: none;" onchange="sendMedia(event)" />
+            <button type="button" class="attach-btn" title="Send Photo or Video" onclick="document.getElementById('media-input').click()">📎</button>
+            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" />
+            <button type="submit" class="send-btn">➤</button>
         </form>
+    </div>
+
+    <!-- Screen 4: Voice / Video Call Overlay -->
+    <div class="call-overlay" id="call-overlay">
+        <div class="call-header">
+            <h3 id="call-title">Calling...</h3>
+            <p id="call-status">Connecting...</p>
+        </div>
+        <div class="video-grid" id="video-grid">
+            <video id="remote-video" autoplay playsinline></video>
+            <video id="local-video" autoplay playsinline muted></video>
+        </div>
+        <div class="call-controls">
+            <button class="call-action-btn btn-accept" id="accept-call-btn" style="display: none;" onclick="acceptIncomingCall()">📞</button>
+            <button class="call-action-btn btn-reject" onclick="endCall(true)">📵</button>
+        </div>
     </div>
 </div>
 
@@ -105,6 +151,13 @@
     const roomId = urlParams.get('room');
     let myName = "";
     let selectedGender = "";
+
+    // WebRTC Variables
+    let localStream = null;
+    let peerConnection = null;
+    let pendingOffer = null;
+    let currentCallType = 'video';
+    const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 
     if (roomId) {
         document.getElementById('lock-screen').style.display = 'none';
@@ -136,7 +189,7 @@
 
         document.getElementById('name-screen').style.display = 'none';
         document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('copy-invite-btn').style.display = 'block';
+        document.getElementById('chat-header-actions').style.display = 'flex';
 
         socket.emit('join room', { roomId: roomId, username: myName, gender: selectedGender });
     }
@@ -147,7 +200,7 @@
 
     function copyInviteLink() {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            alert("Invite Link copy ho gaya hai! Ab ise apne dost ko bhej dein.");
+            alert("Invite Link copy ho gaya hai! Ab ise apne dost ko WhatsApp par bhej dein.");
         }).catch(() => {
             prompt("Is link ko copy karke dost ko bhejein:", window.location.href);
         });
@@ -174,6 +227,7 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 
+    // Text Message bhejna
     document.getElementById('chat-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const input = document.getElementById('msg-input');
@@ -185,8 +239,134 @@
         }
     });
 
+    // Photo ya Video bhejna
+    function sendMedia(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 20 * 1024 * 1024) {
+            alert("File bahut badi hai! Kripya 20MB se chhoti photo ya video chunein.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const msgId = "msg_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+            const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
+
+            socket.emit('room message', {
+                msgId: msgId,
+                mediaData: e.target.result,
+                mediaType: mediaType,
+                time: time
+            });
+        };
+        reader.readAsDataURL(file);
+        event.target.value = "";
+    }
+
+    // Message / Media receive karna
     socket.on('room message', (data) => {
         const messagesDiv = document.getElementById('messages');
+        const div = document.createElement('div');
+        const isMe = data.senderId === socket.id;
+        div.className = 'message ' + (isMe ? 'sent' : 'received');
+
+        let mediaHtml = "";
+        if (data.mediaData) {
+            if (data.mediaType === 'video') {
+                mediaHtml = `<video src="${data.mediaData}" controls class="chat-media"></video>`;
+            } else {
+                mediaHtml = `<img src="${data.mediaData}" class="chat-media" />`;
+            }
+        }
+
+        div.innerHTML = `
+            ${!isMe ? `<span class="sender-name">${data.senderName} (${data.senderGender})</span>` : ''}
+            ${mediaHtml}
+            ${data.text ? `<span>${data.text}</span>` : ''}
+            <span class="meta-info">
+                <span class="timestamp">${data.time}</span>
+                ${isMe ? `<span class="ticks" id="tick-${data.msgId}">✓</span>` : ''}
+            </span>
+        `;
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        if (!isMe) {
+            socket.emit('message seen', { msgId: data.msgId });
+        }
+    });
+
+    socket.on('message seen', ({ msgId }) => {
+        const tickEl = document.getElementById(`tick-${msgId}`);
+        if (tickEl) {
+            tickEl.innerText = "✓✓";
+            tickEl.classList.add("seen");
+        }
+    });
+
+    // --- VOICE & VIDEO CALL LOGIC ---
+    async function setupMediaAndPeer(type) {
+        currentCallType = type;
+        localStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: type === 'video'
+        });
+        document.getElementById('local-video').srcObject = localStream;
+        document.getElementById('local-video').style.display = type === 'video' ? 'block' : 'none';
+
+        peerConnection = new RTCPeerConnection(rtcConfig);
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+        peerConnection.ontrack = (event) => {
+            document.getElementById('remote-video').srcObject = event.streams[0];
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                socket.emit('ice-candidate', { candidate: event.candidate });
+            }
+        };
+    }
+
+    async function startCall(type) {
+        try {
+            document.getElementById('call-overlay').style.display = 'flex';
+            document.getElementById('call-title').innerText = type === 'video' ? "Video Calling..." : "Voice Calling...";
+            document.getElementById('call-status').innerText = "Ringing...";
+            document.getElementById('accept-call-btn').style.display = 'none';
+
+            await setupMediaAndPeer(type);
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            socket.emit('call-user', { offer, callType: type });
+        } catch (err) {
+            alert("Camera ya Microphone ki permission nahi mili!");
+            endCall(false);
+        }
+    }
+
+    socket.on('incoming-call', ({ offer, callType, callerName }) => {
+        pendingOffer = offer;
+        currentCallType = callType;
+        document.getElementById('call-overlay').style.display = 'flex';
+        document.getElementById('call-title').innerText = callerName;
+        document.getElementById('call-status').innerText = callType === 'video' ? "Incoming Video Call..." : "Incoming Voice Call...";
+        document.getElementById('accept-call-btn').style.display = 'flex';
+    });
+
+    async function acceptIncomingCall() {
+        try {
+            document.getElementById('accept-call-btn').style.display = 'none';
+            document.getElementById('call-status').innerText = "Connected";
+
+            await setupMediaAndPeer(currentCallType);
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(pendingOffer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.emit('ans document.getElementById('messages');
         const div = document.createElement('div');
         const isMe = data.senderId === socket.id;
         div.className = 'message ' + (isMe ? 'sent' : 'received');
