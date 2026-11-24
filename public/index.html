@@ -11,9 +11,10 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .hdr{background:linear-gradient(90deg,#008069,#006d59);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 5px rgba(0,0,0,.15);z-index:10}
 .hdr-l{display:flex;align-items:center;gap:10px}
 .av{width:42px;height:42px;background:#dfe5e7;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#008069;font-weight:700;font-size:17px;position:relative;flex-shrink:0}
+.ai-av{background:linear-gradient(135deg,#6a11cb,#2575fc);color:#fff;font-size:20px}
 .dot{width:11px;height:11px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
 .inv-btn{background:#25d366;color:#fff;border:none;padding:8px 13px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer}
-.ic-btn{background:rgba(255,255,255,.2);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}
+.ic-btn{background:rgba(255,255,255,.2);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;justify-content:center;align-items:center}
 .reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:15px}
 .badge{width:72px;height:72px;background:#008069;border-radius:20px;display:flex;justify-content:center;align-items:center;font-size:36px;color:#fff}
 .inp{width:100%;max-width:290px;padding:13px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;outline:none}
@@ -29,7 +30,7 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .unread-badge{background:#25d366;color:#fff;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;justify-content:center;align-items:center;padding:0 6px}
 .chat{flex:1;display:none;flex-direction:column;overflow:hidden;background:#efeae2}
 .msgs{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:18px 18px}
-.msg{max-width:80%;padding:8px 12px;border-radius:12px;font-size:15px;line-height:1.4;box-shadow:0 1px 2px rgba(0,0,0,.1);word-wrap:break-word}
+.msg{max-width:80%;padding:8px 12px;border-radius:12px;font-size:15px;line-height:1.4;box-shadow:0 1px 2px rgba(0,0,0,.1);word-wrap:break-word;white-space:pre-line}
 .sent{background:#d9fdd3;align-self:flex-end;border-top-right-radius:2px}
 .rcvd{background:#fff;align-self:flex-start;border-top-left-radius:2px}
 .media{max-width:100%;max-height:230px;border-radius:8px;display:block;margin:4px 0}
@@ -37,11 +38,17 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .seen{color:#53bdeb;font-weight:700}
 .bar{background:#f0f2f5;padding:9px 10px;display:flex;gap:8px;align-items:center}
 .bar input[type=text]{flex:1;padding:11px 15px;border:none;border-radius:22px;font-size:15px;outline:none;background:#fff}
-.c-ov{position:fixed;inset:0;background:rgba(11,20,26,.98);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:26px 18px;color:#fff}
-.v-box{width:100%;flex:1;position:relative;margin:14px 0;background:#1f2c34;border-radius:14px;overflow:hidden}
+
+/* Call Screen & Controls */
+.c-ov{position:fixed;inset:0;background:rgba(11,20,26,.98);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:24px 16px;color:#fff}
+.v-box{width:100%;flex:1;position:relative;margin:14px 0;background:#1f2c34;border-radius:14px;overflow:hidden;display:flex;justify-content:center;align-items:center}
 #r-vid{width:100%;height:100%;object-fit:cover;background:#000}
-#l-vid{width:110px;height:155px;object-fit:cover;position:absolute;bottom:12px;right:12px;border-radius:12px;border:2px solid #25d366;background:#000;transform:scaleX(-1)}
-.c-btn{width:60px;height:60px;border-radius:50%;border:none;font-size:22px;color:#fff;cursor:pointer;display:flex;justify-content:center;align-items:center}
+#l-vid{width:105px;height:150px;object-fit:cover;position:absolute;bottom:12px;right:12px;border-radius:12px;border:2px solid #25d366;background:#000;transform:scaleX(-1)}
+.hold-banner{position:absolute;background:rgba(0,0,0,.78);padding:12px 22px;border-radius:24px;font-size:16px;font-weight:700;color:#ffd54f;display:none;z-index:5}
+.c-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;width:100%}
+.c-btn-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#cfd8dc}
+.c-btn{width:54px;height:54px;border-radius:50%;border:none;font-size:20px;color:#fff;cursor:pointer;display:flex;justify-content:center;align-items:center;background:#37474f;transition:.2s}
+.c-btn.active-ctrl{background:#ffffff;color:#111b21}
 </style>
 </head>
 <body>
@@ -49,7 +56,7 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="reg" id="s-reg">
     <div class="badge">⚡</div>
     <h2>Welcome to Zip</h2>
-    <p>Sirf ek baar naam aur gender daalein, bina invite link ke direct chat shuru hogi:</p>
+    <p>Sirf ek baar naam aur gender daalein:</p>
     <input type="text" id="u-name" class="inp" placeholder="Enter your 5 word name">
     <div class="g-box">
       <button type="button" class="g-btn" id="b-m">👨 Male</button>
@@ -74,9 +81,9 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
         <div class="av" id="f-av">U</div>
         <div><h3 id="f-name" style="font-size:15px">Friend</h3><p id="f-st" style="font-size:11px">Offline</p></div>
       </div>
-      <div style="display:flex;gap:8px">
-        <button type="button" class="ic-btn" id="b-acall">📞</button>
-        <button type="button" class="ic-btn" id="b-vcall">📹</button>
+      <div id="call-icons" style="display:flex;gap:8px">
+        <button type="button" class="ic-btn" id="b-acall" title="Voice Call">📞</button>
+        <button type="button" class="ic-btn" id="b-vcall" title="Video Call">📹</button>
       </div>
     </div>
     <div class="msgs" id="msgs"></div>
@@ -88,16 +95,39 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
     </form>
   </div>
 
+  <!-- Voice & Video Call Overlay with Mic Mute, Speaker Mute, Hold & Flip -->
   <div class="c-ov" id="s-call">
-    <div style="text-align:center"><h3 id="c-tit">Calling...</h3><p id="c-st" style="color:#25d366">Camera On...</p></div>
+    <div style="text-align:center"><h3 id="c-tit">Calling...</h3><p id="c-st" style="color:#25d366;margin-top:4px">Connecting...</p></div>
     <div class="v-box">
+      <div class="hold-banner" id="hold-banner">⏸️ Call on Hold</div>
       <video id="r-vid" autoplay playsinline></video>
       <video id="l-vid" autoplay playsinline muted></video>
     </div>
-    <div style="display:flex;gap:22px">
-      <button type="button" class="c-btn" id="b-acc" style="background:#25d366;display:none">📞</button>
-      <button type="button" class="c-btn" id="b-flip" style="background:#37474f;display:none" title="Flip Camera">🔄</button>
-      <button type="button" class="c-btn" id="b-end" style="background:#e53935">📵</button>
+    <div class="c-controls">
+      <div class="c-btn-wrap" id="w-acc" style="display:none">
+        <button type="button" class="c-btn" id="b-acc" style="background:#25d366">📞</button>
+        <span>Accept</span>
+      </div>
+      <div class="c-btn-wrap">
+        <button type="button" class="c-btn" id="b-mute">🎤</button>
+        <span id="lbl-mute">Mic Mute</span>
+      </div>
+      <div class="c-btn-wrap">
+        <button type="button" class="c-btn" id="b-spk">🔊</button>
+        <span id="lbl-spk">Speaker</span>
+      </div>
+      <div class="c-btn-wrap">
+        <button type="button" class="c-btn" id="b-hold">⏸️</button>
+        <span id="lbl-hold">Hold</span>
+      </div>
+      <div class="c-btn-wrap" id="w-flip" style="display:none">
+        <button type="button" class="c-btn" id="b-flip">🔄</button>
+        <span>Flip</span>
+      </div>
+      <div class="c-btn-wrap">
+        <button type="button" class="c-btn" id="b-end" style="background:#e53935">📵</button>
+        <span>End</span>
+      </div>
     </div>
   </div>
 </div>
@@ -110,7 +140,10 @@ let chats = {}; try{ chats = JSON.parse(localStorage.getItem('zip_chats')) || {}
 let contacts = []; try{ contacts = JSON.parse(localStorage.getItem('zip_contacts')) || []; }catch(e){}
 let unread = {};
 let fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null, facingMode = 'user';
+let isMicMuted = false, isSpkMuted = false, isOnHold = false;
 const rtc = {iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+
+const AI_BOT = { id: 'zip_ai_bot', name: 'Zip AI', gender: 'AI', online: true };
 
 document.getElementById('b-m').onclick = () => { gen='Male'; document.getElementById('b-m').classList.add('act'); document.getElementById('b-f').classList.remove('act'); };
 document.getElementById('b-f').onclick = () => { gen='Female'; document.getElementById('b-f').classList.add('act'); document.getElementById('b-m').classList.remove('act'); };
@@ -135,7 +168,7 @@ socket.on('connect',()=>{ if(me) socket.emit('register',{userId:me.id,name:me.na
 
 document.getElementById('b-inv').onclick = () => {
   const u = location.origin;
-  if(navigator.clipboard) navigator.clipboard.writeText(u).then(()=>alert('App Link copy ho gaya! Kisi ko bhi bhejein, direct open hoga.')).catch(()=>prompt('Copy karein:',u));
+  if(navigator.clipboard) navigator.clipboard.writeText(u).then(()=>alert('App Link copy ho gaya! Kisi ko bhi bhejein.')).catch(()=>prompt('Copy karein:',u));
   else prompt('Copy karein:',u);
 };
 
@@ -147,7 +180,7 @@ socket.on('contact list',(l)=>{
   });
   try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
   drawList();
-  if(fid){
+  if(fid && fid !== AI_BOT.id){
     const f = contacts.find(c=>c.id===fid);
     if(f) document.getElementById('f-st').innerText = f.online?'Online':'Offline';
   }
@@ -155,29 +188,34 @@ socket.on('contact list',(l)=>{
 
 function drawList(){
   const box = document.getElementById('c-list');
-  if(!contacts.length){
-    box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi user online nahi hai</h3><p style="margin-top:8px">Jaise hi koi app kholega, uska naam apne aap yahan aa jayega.</p></div>';
-    return;
-  }
   box.innerHTML='';
-  contacts.forEach(f=>{
+  const fullList = [AI_BOT, ...contacts.filter(c => c.id !== AI_BOT.id)];
+
+  fullList.forEach(f=>{
+    const isAI = f.id === AI_BOT.id;
     const m = chats[f.id]||[], last = m[m.length-1], uCount = unread[f.id]||0;
     const r = document.createElement('div'); r.className='row';
-    r.innerHTML='<div class="av">'+f.name[0].toUpperCase()+(f.online?'<span class="dot"></span>':'')+'</div>'+
-      '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>'+f.name+' ('+f.gender+')</b><span style="font-size:11px;color:'+(uCount?'#25d366':'#667781')+'">'+(last?last.time:'')+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):(f.online?'Online • Tap to chat':'Tap to chat'))+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
+    r.innerHTML='<div class="av '+(isAI?'ai-av':'')+'">'+(isAI?'🤖':f.name[0].toUpperCase())+(f.online?'<span class="dot"></span>':'')+'</div>'+
+      '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>'+f.name+(isAI?' ✨':' ('+f.gender+')')+'</b><span style="font-size:11px;color:'+(uCount?'#25d366':'#667781')+'">'+(last?last.time:'')+'</span></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):(isAI?'Ask AI anything • Online':'Tap to chat'))+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
     r.onclick = ()=>{
       fid = f.id;
       unread[f.id] = 0;
       document.getElementById('s-home').style.display='none';
       document.getElementById('s-chat').style.display='flex';
-      document.getElementById('f-av').innerText=f.name[0].toUpperCase();
-      document.getElementById('f-name').innerText=f.name+' ('+f.gender+')';
-      document.getElementById('f-st').innerText=f.online?'Online':'Offline';
+      document.getElementById('f-av').innerText = isAI ? '🤖' : f.name[0].toUpperCase();
+      document.getElementById('f-av').className = 'av' + (isAI ? ' ai-av' : '');
+      document.getElementById('f-name').innerText = isAI ? 'Zip AI ✨' : f.name+' ('+f.gender+')';
+      document.getElementById('f-st').innerText = f.online?'Online':'Offline';
+      document.getElementById('call-icons').style.display = isAI ? 'none' : 'flex';
+
       const mb = document.getElementById('msgs'); mb.innerHTML='';
+      if(isAI && (!chats[f.id] || chats[f.id].length === 0)){
+        addMsg({fromUserId: AI_BOT.id, text: 'Namaste '+me.name+'! Main Zip AI hoon 🤖 Mujhse koi bhi sawal poochein, shayari ya joke sunein!', time: 'Now'});
+      }
       (chats[f.id]||[]).forEach(x=>{
         addMsg(x);
-        if(x.fromUserId===f.id && !x.seenSent){ socket.emit('message seen',{toUserId:f.id,msgId:x.msgId}); x.seenSent=true; }
+        if(x.fromUserId===f.id && !x.seenSent && !isAI){ socket.emit('message seen',{toUserId:f.id,msgId:x.msgId}); x.seenSent=true; }
       });
       try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
     };
@@ -216,18 +254,20 @@ socket.on('private message',(d)=>{
     try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
   }
 
-  const existingIdx = contacts.findIndex(c => c.id === id);
-  if(existingIdx === -1 && d.fromUserId !== me.id){
-    contacts.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
-    try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
-  } else if(existingIdx > 0){
-    const [moved] = contacts.splice(existingIdx, 1);
-    contacts.unshift(moved);
+  if(id !== AI_BOT.id){
+    const existingIdx = contacts.findIndex(c => c.id === id);
+    if(existingIdx === -1 && d.fromUserId !== me.id){
+      contacts.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
+      try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
+    } else if(existingIdx > 0){
+      const [moved] = contacts.splice(existingIdx, 1);
+      contacts.unshift(moved);
+    }
   }
 
   if(fid===id){
     addMsg(d);
-    if(d.fromUserId!==me.id) socket.emit('message seen',{toUserId:id,msgId:d.msgId});
+    if(d.fromUserId!==me.id && id!==AI_BOT.id) socket.emit('message seen',{toUserId:id,msgId:d.msgId});
   } else {
     if(d.fromUserId!==me.id) unread[id] = (unread[id]||0) + 1;
     drawList();
@@ -247,9 +287,22 @@ socket.on('message seen',({fromUserId,msgId})=>{
   const t=document.getElementById('tk-'+msgId); if(t){ t.innerText='✓✓'; t.classList.add('seen'); }
 });
 
-// Direct Camera & Mic Access On for Video/Voice Call
+// --- VOICE & VIDEO CALL WITH MIC MUTE, SPEAKER MUTE, HOLD & FLIP ---
+function resetCallControls(){
+  isMicMuted = false; isSpkMuted = false; isOnHold = false;
+  document.getElementById('b-mute').classList.remove('active-ctrl');
+  document.getElementById('lbl-mute').innerText = 'Mic Mute';
+  document.getElementById('b-spk').classList.remove('active-ctrl');
+  document.getElementById('lbl-spk').innerText = 'Speaker';
+  document.getElementById('b-hold').classList.remove('active-ctrl');
+  document.getElementById('lbl-hold').innerText = 'Hold';
+  document.getElementById('hold-banner').style.display = 'none';
+  document.getElementById('r-vid').muted = false;
+}
+
 async function setupP(tp){
   cType=tp;
+  resetCallControls();
   if(lStream){ lStream.getTracks().forEach(t=>t.stop()); }
   const constraints = tp === 'video'
     ? { audio: true, video: { facingMode: facingMode } }
@@ -259,7 +312,7 @@ async function setupP(tp){
   const localVid = document.getElementById('l-vid');
   localVid.srcObject = lStream;
   localVid.style.display = tp === 'video' ? 'block' : 'none';
-  document.getElementById('b-flip').style.display = tp === 'video' ? 'flex' : 'none';
+  document.getElementById('w-flip').style.display = tp === 'video' ? 'flex' : 'none';
   if(tp === 'video') localVid.play().catch(()=>{});
 
   pc = new RTCPeerConnection(rtc);
@@ -274,84 +327,36 @@ async function setupP(tp){
   };
 }
 
-// Front/Back Camera Flip button
-document.getElementById('b-flip').onclick = async () => {
-  if(cType !== 'video' || !pc) return;
-  facingMode = facingMode === 'user' ? 'environment' : 'user';
-  try{
-    const newStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { facingMode: facingMode } });
-    const newVideoTrack = newStream.getVideoTracks()[0];
-    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
-    if(sender) await sender.replaceTrack(newVideoTrack);
-    if(lStream) lStream.getVideoTracks().forEach(t => t.stop());
-    lStream = newStream;
-    document.getElementById('l-vid').srcObject = lStream;
-    document.getElementById('l-vid').style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'none';
-  }catch(e){}
+// 1. Mic Mute / Unmute
+document.getElementById('b-mute').onclick = () => {
+  if(!lStream) return;
+  isMicMuted = !isMicMuted;
+  lStream.getAudioTracks().forEach(t => t.enabled = !isMicMuted && !isOnHold);
+  document.getElementById('b-mute').classList.toggle('active-ctrl', isMicMuted);
+  document.getElementById('lbl-mute').innerText = isMicMuted ? 'Unmute' : 'Mic Mute';
 };
 
-async function callNow(tp){
-  if(!fid) return;
-  try{
-    cTarget = fid;
-    document.getElementById('s-call').style.display = 'flex';
-    document.getElementById('c-tit').innerText = tp === 'video' ? 'Video Calling...' : 'Voice Calling...';
-    document.getElementById('c-st').innerText = 'Camera On • Ringing...';
-    document.getElementById('b-acc').style.display = 'none';
-    await setupP(tp);
-    const off = await pc.createOffer();
-    await pc.setLocalDescription(off);
-    socket.emit('call-user', {toUserId: cTarget, offer: off, callType: tp});
-  }catch(e){
-    alert('Video Call ke liye browser popup mein Camera aur Mic ko Allow karein!');
-    stopC(false);
-  }
-}
-document.getElementById('b-acall').onclick = () => callNow('audio');
-document.getElementById('b-vcall').onclick = () => callNow('video');
-
-socket.on('incoming-call', ({fromUserId, callerName, offer, callType}) => {
-  cTarget = fromUserId; pOffer = offer; cType = callType;
-  document.getElementById('s-call').style.display = 'flex';
-  document.getElementById('c-tit').innerText = callerName;
-  document.getElementById('c-st').innerText = callType === 'video' ? 'Incoming Video Call...' : 'Incoming Voice Call...';
-  document.getElementById('b-acc').style.display = 'flex';
-});
-
-document.getElementById('b-acc').onclick = async () => {
-  try{
-    document.getElementById('b-acc').style.display = 'none';
-    document.getElementById('c-st').innerText = 'Connected';
-    await setupP(cType);
-    await pc.setRemoteDescription(new RTCSessionDescription(pOffer));
-    const ans = await pc.createAnswer();
-    await pc.setLocalDescription(ans);
-    socket.emit('answer-call', {toUserId: cTarget, answer: ans});
-  }catch(e){
-    alert('Camera aur Mic permission Allow karein!');
-    stopC(true);
-  }
+// 2. Speaker Mute / Unmute
+document.getElementById('b-spk').onclick = () => {
+  isSpkMuted = !isSpkMuted;
+  document.getElementById('r-vid').muted = isSpkMuted || isOnHold;
+  document.getElementById('b-spk').classList.toggle('active-ctrl', isSpkMuted);
+  document.getElementById('lbl-spk').innerText = isSpkMuted ? 'Spk Off' : 'Speaker';
 };
 
-socket.on('call-answered', async ({answer}) => {
-  document.getElementById('c-st').innerText = 'Connected';
-  if(pc) await pc.setRemoteDescription(new RTCSessionDescription(answer));
-});
+// 3. Call Hold / Resume
+document.getElementById('b-hold').onclick = () => {
+  if(!lStream) return;
+  isOnHold = !isOnHold;
+  lStream.getAudioTracks().forEach(t => t.enabled = !isOnHold && !isMicMuted);
+  lStream.getVideoTracks().forEach(t => t.enabled = !isOnHold);
+  document.getElementById('r-vid').muted = isOnHold || isSpkMuted;
+  document.getElementById('b-hold').classList.toggle('active-ctrl', isOnHold);
+  document.getElementById('lbl-hold').innerText = isOnHold ? 'Resume' : 'Hold';
+  document.getElementById('hold-banner').style.display = isOnHold ? 'block' : 'none';
+  document.getElementById('hold-banner').innerText = '⏸️ You put call on Hold';
+  if(cTarget) socket.emit('call-hold', { toUserId: cTarget, isHold: isOnHold });
+};
 
-socket.on('ice-candidate', async ({candidate}) => {
-  if(pc && candidate) try{ await pc.addIceCandidate(new RTCIceCandidate(candidate)); }catch(e){}
-});
-
-function stopC(n){
-  if(n && cTarget) socket.emit('end-call', {toUserId: cTarget});
-  if(lStream){ lStream.getTracks().forEach(t => t.stop()); lStream = null; }
-  if(pc){ pc.close(); pc = null; }
-  cTarget = null;
-  document.getElementById('b-flip').style.display = 'none';
-  document.getElementById('s-call').style.display = 'none';
-}
-document.getElementById('b-end').onclick = () => stopC(true);
-socket.on('call-ended', () => stopC(false));
-</script>
-</body>
-</html>
+socket.on('call-hold', ({ isHold }) => {
+  const banner = document.getElementById('hol
