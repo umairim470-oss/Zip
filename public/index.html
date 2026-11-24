@@ -7,63 +7,192 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #d1d7db; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .chat-container { width: 100%; max-width: 500px; height: 90vh; background: #efeae2; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
-        .header { background-color: #008069; color: white; padding: 15px 20px; display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: #dfe5e7; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #54656f; font-weight: bold; }
+        .app-container { width: 100%; max-width: 500px; height: 92vh; background: #ffffff; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
+        
+        /* Header */
+        .header { background-color: #008069; color: white; padding: 15px 18px; display: flex; align-items: center; gap: 12px; }
+        .back-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
+        .avatar { width: 40px; height: 40px; background: #dfe5e7; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #008069; font-weight: bold; font-size: 16px; }
         .header-info h3 { font-size: 16px; font-weight: 600; }
         .header-info p { font-size: 12px; color: #d9fdd3; }
-        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
-        .message { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+
+        /* Contacts Screen */
+        .contacts-screen { flex: 1; overflow-y: auto; background: #ffffff; }
+        .empty-msg { text-align: center; color: #667781; padding: 40px 20px; font-size: 14px; line-height: 1.5; }
+        .contact-item { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid #f0f2f5; cursor: pointer; gap: 14px; }
+        .contact-item:hover { background-color: #f5f6f6; }
+        .contact-details { flex: 1; }
+        .contact-name { font-size: 16px; font-weight: 500; color: #111b21; }
+        .contact-status { font-size: 12px; color: #00a884; margin-top: 2px; }
+        .badge { background-color: #25d366; color: white; font-size: 11px; font-weight: bold; padding: 3px 7px; border-radius: 12px; display: none; }
+
+        /* Chat Screen */
+        .chat-screen { flex: 1; display: none; flex-direction: column; background: #efeae2; overflow: hidden; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
+        .message { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
         .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
         .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
-        .sender-name { font-size: 11px; font-weight: bold; color: #008069; margin-bottom: 3px; display: block; }
         .timestamp { font-size: 10px; color: #667781; float: right; margin-left: 10px; margin-top: 5px; }
-        .input-area { background-color: #f0f2f5; padding: 10px 15px; display: flex; gap: 10px; align-items: center; }
+
+        /* Input Area */
+        .input-area { background-color: #f0f2f5; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
         .input-area input { flex: 1; padding: 12px 15px; border: none; border-radius: 24px; outline: none; font-size: 15px; }
-        .input-area button { background-color: #008069; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
-        .input-area button:hover { background-color: #006d59; }
+        .input-area button { background-color: #008069; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
-<div class="chat-container">
+
+<div class="app-container">
     <div class="header">
-        <div class="avatar">Z</div>
+        <button class="back-btn" id="back-btn" onclick="showContacts()">←</button>
+        <div class="avatar" id="header-avatar">Z</div>
         <div class="header-info">
-            <h3>Zip Chat</h3>
-            <p>online</p>
+            <h3 id="header-title">Zip Chat</h3>
+            <p id="header-subtitle">Online Friends</p>
         </div>
     </div>
-    <div class="messages" id="messages"></div>
-    <form class="input-area" id="chat-form">
-        <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off" required />
-        <button type="submit">➤</button>
-    </form>
+
+    <!-- Contacts List Screen -->
+    <div class="contacts-screen" id="contacts-screen">
+        <div class="empty-msg" id="empty-msg">Abhi koi dost online nahi hai.<br>Apne doston ko is app ka link bhejein!</div>
+        <div id="user-list"></div>
+    </div>
+
+    <!-- Private Chat Screen -->
+    <div class="chat-screen" id="chat-screen">
+        <div class="messages" id="messages"></div>
+        <form class="input-area" id="chat-form">
+            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" required />
+            <button type="submit">➤</button>
+        </form>
+    </div>
 </div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
-    const form = document.getElementById('chat-form');
-    const input = document.getElementById('msg-input');
-    const messages = document.getElementById('messages');
-    const username = prompt("Enter your name:") || "User_" + Math.floor(Math.random() * 1000);
+    const myName = prompt("Apna naam likhein:") || "User_" + Math.floor(Math.random() * 1000);
+    
+    let selectedUserId = null;
+    let selectedUserName = "";
+    const chatHistory = {}; // Har dost ki chat alag store hogi
+    const unreadCounts = {};
 
-    form.addEventListener('submit', (e) => {
+    socket.on('connect', () => {
+        socket.emit('register', myName);
+        document.getElementById('header-subtitle').innerText = "Logged in as " + myName;
+    });
+
+    // Online doston ki list update karna
+    socket.on('user list', (users) => {
+        const userListDiv = document.getElementById('user-list');
+        const emptyMsg = document.getElementById('empty-msg');
+        userListDiv.innerHTML = '';
+
+        const otherUsers = users.filter(u => u.id !== socket.id);
+        emptyMsg.style.display = otherUsers.length === 0 ? 'block' : 'none';
+
+        otherUsers.forEach(user => {
+            const count = unreadCounts[user.id] || 0;
+            const item = document.createElement('div');
+            item.className = 'contact-item';
+            item.onclick = () => openChat(user.id, user.name);
+            item.innerHTML = `
+                <div class="avatar">${user.name.charAt(0).toUpperCase()}</div>
+                <div class="contact-details">
+                    <div class="contact-name">${user.name}</div>
+                    <div class="contact-status">● online</div>
+                </div>
+                <span class="badge" style="display: ${count > 0 ? 'inline-block' : 'none'}">${count}</span>
+            `;
+            userListDiv.appendChild(item);
+        });
+
+        // Agar jis dost se baat chal rahi thi woh offline ho jaye
+        if (selectedUserId && !otherUsers.find(u => u.id === selectedUserId)) {
+            document.getElementById('header-subtitle').innerText = "offline";
+        }
+    });
+
+    // Kisi dost ki chat kholna
+    function openChat(userId, userName) {
+        selectedUserId = userId;
+        selectedUserName = userName;
+        unreadCounts[userId] = 0;
+
+        document.getElementById('contacts-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('header-title').innerText = userName;
+        document.getElementById('header-subtitle').innerText = 'online';
+        document.getElementById('header-avatar').innerText = userName.charAt(0).toUpperCase();
+
+        renderMessages();
+    }
+
+    // Wapas contacts list par jana
+    function showContacts() {
+        selectedUserId = null;
+        document.getElementById('chat-screen').style.display = 'none';
+        document.getElementById('contacts-screen').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'none';
+        document.getElementById('header-title').innerText = 'Zip Chat';
+        document.getElementById('header-subtitle').innerText = 'Logged in as ' + myName;
+        document.getElementById('header-avatar').innerText = 'Z';
+    }
+
+    // Message bhejna
+    document.getElementById('chat-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        if (input.value.trim()) {
+        const input = document.getElementById('msg-input');
+        if (input.value.trim() && selectedUserId) {
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            socket.emit('chat message', { user: username, text: input.value, time: time });
+            const text = input.value;
+
+            socket.emit('private message', { to: selectedUserId, text: text, time: time });
+
+            if (!chatHistory[selectedUserId]) chatHistory[selectedUserId] = [];
+            chatHistory[selectedUserId].push({ type: 'sent', text: text, time: time });
+            
+            renderMessages();
             input.value = '';
         }
     });
 
-    socket.on('chat message', (data) => {
-        const div = document.createElement('div');
-        const isMe = data.user === username;
-        div.classList.add('message', isMe ? 'sent' : 'received');
-        div.innerHTML = `${!isMe ? `<span class="sender-name">${data.user}</span>` : ''}<span>${data.text}</span><span class="timestamp">${data.time}</span>`;
-        messages.appendChild(div);
-        messages.scrollTop = messages.scrollHeight;
+    // Dost ka message receive karna
+    socket.on('private message', ({ from, senderName, text, time }) => {
+        if (!chatHistory[from]) chatHistory[from] = [];
+        chatHistory[from].push({ type: 'received', text: text, time: time });
+
+        if (selectedUserId === from) {
+            renderMessages();
+        } else {
+            unreadCounts[from] = (unreadCounts[from] || 0) + 1;
+            // Badge update karne ke liye list refresh trigger
+            const badges = document.querySelectorAll('.contact-item');
+            badges.forEach(item => {
+                if (item.querySelector('.contact-name').innerText === senderName) {
+                    const b = item.querySelector('.badge');
+                    b.innerText = unreadCounts[from];
+                    b.style.display = 'inline-block';
+                }
+            });
+        }
     });
+
+    function renderMessages() {
+        const messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = '';
+        const msgs = chatHistory[selectedUserId] || [];
+
+        msgs.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'message ' + m.type;
+            div.innerHTML = `<span>${m.text}</span><span class="timestamp">${m.time}</span>`;
+            messagesDiv.appendChild(div);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
 </script>
 </body>
 </html>
