@@ -14,20 +14,19 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .ai-av{background:#5e35b1;color:#fff}
 .grp-av{background:#0288d1;color:#fff}
 .dot{width:10px;height:10px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
-.btn-s{background:#25d366;color:#fff;border:none;padding:8px 12px;border-radius:18px;font-weight:700;font-size:12px;cursor:pointer}
-.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:15px;cursor:pointer}
+.btn-s{background:#25d366;color:#fff;border:none;padding:8px 12px;border-radius:18px;font-weight:700;font-size:12px}
+.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:15px}
 .reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:15px;overflow-y:auto}
 .inp{width:100%;max-width:290px;padding:14px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;background:#fff}
 .g-box{display:flex;gap:12px;width:100%;max-width:290px}
-.g-btn{flex:1;padding:15px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.g-btn{flex:1;padding:15px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700}
 .act{border-color:#008069;background:#d9fdd3;color:#008069}
-.go{width:100%;max-width:290px;background:#008069;color:#fff;border:none;padding:16px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer}
-.go:active{background:#005c4b}
+.go{width:100%;max-width:290px;background:#008069;color:#fff;border:none;padding:16px;border-radius:25px;font-size:16px;font-weight:700}
 .home,.chat{flex:1;display:none;flex-direction:column;overflow:hidden}
 .chat{background:#efeae2}
 .list,.msgs{flex:1;overflow-y:auto}
 .msgs{padding:12px;display:flex;flex-direction:column;gap:8px}
-.row{display:flex;align-items:center;padding:13px 15px;border-bottom:1px solid #eee;gap:12px;cursor:pointer}
+.row{display:flex;align-items:center;padding:13px 15px;border-bottom:1px solid #eee;gap:12px}
 .bdg{background:#25d366;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
 .msg{max-width:82%;padding:8px 11px;border-radius:10px;font-size:15px;word-wrap:break-word;white-space:pre-line}
 .sent{background:#d9fdd3;align-self:flex-end}
@@ -35,14 +34,14 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .g-sender{font-size:11px;font-weight:700;color:#008069;display:block;margin-bottom:2px}
 .med{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:4px 0}
 .meta{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:4px;font-size:10px;color:#667781}
-.m-act{background:none;border:none;font-size:13px;cursor:pointer;padding:2px 4px}
+.m-act{background:none;border:none;font-size:13px;padding:2px 4px}
 .seen{color:#53bdeb;font-weight:700}
 .bar{background:#f0f2f5;padding:8px 10px;display:flex;gap:8px;align-items:center}
 .bar input[type=text]{flex:1;padding:11px 14px;border:none;border-radius:20px;font-size:15px;outline:none}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;justify-content:center;align-items:center;padding:16px}
 .m-box{background:#fff;width:100%;max-width:360px;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;max-height:80vh}
 .m-list{overflow-y:auto;max-height:220px;border:1px solid #eee;border-radius:8px}
-.m-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f5f5f5;cursor:pointer}
+.m-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f5f5f5}
 .c-ov{position:fixed;inset:0;background:#0b141a;z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:24px 16px;color:#fff}
 .v-box{width:100%;flex:1;position:relative;margin:12px 0;background:#1f2c34;border-radius:12px;overflow:hidden;display:flex;justify-content:center;align-items:center}
 #rv{width:100%;height:100%;object-fit:cover}
@@ -59,22 +58,23 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="reg" id="sr">
     <div style="font-size:44px">⚡</div>
     <h2>Welcome to Zip</h2>
+    <div id="js-ok" style="font-size:11px;color:#e53935">⏳ Loading script...</div>
     <input type="text" id="un" class="inp" placeholder="Enter your 5 word name">
     <div class="g-box">
-      <button type="button" class="g-btn" id="bm" onclick="setG('Male')">👨 Male</button>
-      <button type="button" class="g-btn" id="bf" onclick="setG('Female')">👩 Female</button>
+      <button type="button" class="g-btn" id="bm">👨 Male</button>
+      <button type="button" class="g-btn" id="bf">👩 Female</button>
     </div>
     <div id="er" style="color:red;font-size:13px;font-weight:700;display:none"></div>
-    <button type="button" class="go" onclick="enterApp()">Aage Badhein</button>
+    <button type="button" class="go" id="bgo">Aage Badhein</button>
   </div>
 
   <div class="home" id="sh">
     <div class="hdr">
       <div class="hdr-l"><div class="av">⚡</div><div><h3>Welcome to Zip</h3><p id="mt" style="font-size:11px;color:#d9fdd3"></p></div></div>
       <div style="display:flex;gap:6px">
-        <button type="button" class="btn-s" onclick="openGrp()">+ Group</button>
-        <button type="button" class="ic" onclick="reqNotif()">🔔</button>
-        <button type="button" class="btn-s" onclick="shareUrl()">Share</button>
+        <button type="button" class="btn-s" id="bgrp">+ Group</button>
+        <button type="button" class="ic" id="bnot">🔔</button>
+        <button type="button" class="btn-s" id="bshr">Share</button>
       </div>
     </div>
     <div class="list" id="cl"></div>
@@ -83,20 +83,20 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="chat" id="sc">
     <div class="hdr">
       <div class="hdr-l">
-        <button type="button" onclick="goHome()" style="background:none;border:none;color:#fff;font-size:22px">←</button>
+        <button type="button" id="bbk" style="background:none;border:none;color:#fff;font-size:22px">←</button>
         <div class="av" id="fa">U</div>
         <div style="overflow:hidden"><h3 id="fn" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Friend</h3><p id="fs" style="font-size:11px">Offline</p></div>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
-        <button type="button" class="ic" onclick="clearMsgs()">🗑️</button>
-        <button type="button" class="ic" id="bac" onclick="makeCall('audio')">📞</button>
-        <button type="button" class="ic" id="bvc" onclick="makeCall('video')">📹</button>
+        <button type="button" class="ic" id="bclr">🗑️</button>
+        <button type="button" class="ic" id="bac">📞</button>
+        <button type="button" class="ic" id="bvc">📹</button>
       </div>
     </div>
     <div class="msgs" id="ms"></div>
-    <form class="bar" onsubmit="sendText(event)">
-      <input type="file" id="fm" accept="image/*,video/*" style="display:none" onchange="sendFile(event)">
-      <button type="button" onclick="document.getElementById('fm').click()" style="background:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:18px">📎</button>
+    <form class="bar" id="fmsg">
+      <input type="file" id="fm" accept="image/*,video/*" style="display:none">
+      <button type="button" id="batt" style="background:#fff;border:none;width:40px;height:40px;border-radius:50%;font-size:18px">📎</button>
       <input type="text" id="tm" placeholder="Message likhein...">
       <button type="submit" style="background:#008069;color:#fff;border:none;width:42px;height:42px;border-radius:50%;font-size:17px">➤</button>
     </form>
@@ -108,8 +108,8 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
       <input type="text" id="g-name" class="inp" style="max-width:100%" placeholder="Group ka naam likhein...">
       <div class="m-list" id="g-members"></div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button type="button" onclick="closeGrp()" style="padding:10px 16px;border:none;border-radius:20px;background:#eee">Cancel</button>
-        <button type="button" onclick="saveGrp()" style="padding:10px 18px;border:none;border-radius:20px;background:#008069;color:#fff;font-weight:700">Create Group</button>
+        <button type="button" id="gcan" style="padding:10px 16px;border:none;border-radius:20px;background:#eee">Cancel</button>
+        <button type="button" id="gcre" style="padding:10px 18px;border:none;border-radius:20px;background:#008069;color:#fff;font-weight:700">Create Group</button>
       </div>
     </div>
   </div>
@@ -118,18 +118,21 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
     <div style="text-align:center"><h3 id="ct">Calling...</h3><p id="cs" style="color:#25d366">Connecting...</p></div>
     <div class="v-box"><div class="hb" id="hb">⏸️ On Hold</div><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video></div>
     <div class="cc">
-      <div class="cw" id="wa" style="display:none"><button type="button" class="cb" onclick="acceptCall()" style="background:#25d366">📞</button><span>Accept</span></div>
-      <div class="cw"><button type="button" class="cb" id="bmu" onclick="toggleMute()">🎤</button><span>Mute</span></div>
-      <div class="cw"><button type="button" class="cb" id="bsp" onclick="toggleSpk()">🔊</button><span>Speaker</span></div>
-      <div class="cw"><button type="button" class="cb" id="bho" onclick="toggleHold()">⏸️</button><span>Hold</span></div>
-      <div class="cw" id="wf" style="display:none"><button type="button" class="cb" onclick="flipCamera()">🔄</button><span>Flip</span></div>
-      <div class="cw"><button type="button" class="cb" onclick="endCall(true)" style="background:#e53935">📵</button><span>End</span></div>
+      <div class="cw" id="wa" style="display:none"><button type="button" class="cb" id="bacc" style="background:#25d366">📞</button><span>Accept</span></div>
+      <div class="cw"><button type="button" class="cb" id="bmu">🎤</button><span>Mute</span></div>
+      <div class="cw"><button type="button" class="cb" id="bsp">🔊</button><span>Speaker</span></div>
+      <div class="cw"><button type="button" class="cb" id="bho">⏸️</button><span>Hold</span></div>
+      <div class="cw" id="wf" style="display:none"><button type="button" class="cb" id="bfl">🔄</button><span>Flip</span></div>
+      <div class="cw"><button type="button" class="cb" id="ben" style="background:#e53935">📵</button><span>End</span></div>
     </div>
   </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
+document.getElementById('js-ok').innerText = '✅ Ready';
+document.getElementById('js-ok').style.color = '#008069';
+
 var sk = { emit: function(){}, on: function(){} };
 try { if (typeof io !== 'undefined') sk = io(); } catch(e) {}
 
@@ -147,14 +150,17 @@ var mm = false, smu = false, oh = false, rt = null;
 var rtc = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 var AI = { id: 'zip_ai_bot', name: 'Zip AI', gender: 'AI', online: true };
 
-function setG(g) {
+function pickG(g) {
   gen = g;
   document.getElementById('bm').className = g === 'Male' ? 'g-btn act' : 'g-btn';
   document.getElementById('bf').className = g === 'Female' ? 'g-btn act' : 'g-btn';
   document.getElementById('er').style.display = 'none';
 }
 
-function enterApp() {
+document.getElementById('bm').onclick = function() { pickG('Male'); };
+document.getElementById('bf').onclick = function() { pickG('Female'); };
+
+document.getElementById('bgo').onclick = function() {
   var inp = document.getElementById('un');
   var er = document.getElementById('er');
   var n = inp.value.trim();
@@ -171,9 +177,9 @@ function enterApp() {
   er.style.display = 'none';
   me = { id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), name: n, gender: gen };
   try { localStorage.setItem('zip_user', JSON.stringify(me)); } catch(e) {}
-  reqNotif();
+  try { if ('Notification' in window) Notification.requestPermission(); } catch(e) {}
   openHome();
-}
+};
 
 function openHome() {
   document.getElementById('sr').style.display = 'none';
@@ -189,9 +195,15 @@ sk.on('connect', function() {
   if (me) sk.emit('register', { userId: me.id, name: me.name, gender: me.gender });
 });
 
-function reqNotif() {
+document.getElementById('bnot').onclick = function() {
   try { if ('Notification' in window) Notification.requestPermission(); } catch(e) {}
-}
+};
+document.getElementById('bshr').onclick = function() {
+  var u = location.origin;
+  if (navigator.clipboard) navigator.clipboard.writeText(u).then(function() { alert('Link copied!'); });
+  else prompt('Copy link:', u);
+};
+
 function sendNotif(t, b) {
   try { if ('Notification' in window && Notification.permission === 'granted') new Notification(t, { body: b }); } catch(e) {}
 }
@@ -203,11 +215,6 @@ function tone(c) {
     o.connect(g); g.connect(x.destination); o.start(); o.stop(x.currentTime + 0.3);
   } catch(e) {}
   if (navigator.vibrate) navigator.vibrate(c ? [300, 150, 300] : 150);
-}
-function shareUrl() {
-  var u = location.origin;
-  if (navigator.clipboard) navigator.clipboard.writeText(u).then(function() { alert('Link copied!'); });
-  else prompt('Copy link:', u);
 }
 
 sk.on('contact list', function(l) {
@@ -230,7 +237,7 @@ sk.on('group list', function(gl) {
 });
 
 var selMembers = new Set();
-function openGrp() {
+document.getElementById('bgrp').onclick = function() {
   selMembers.clear();
   document.getElementById('g-name').value = '';
   var box = document.getElementById('g-members'); box.innerHTML = '';
@@ -245,14 +252,14 @@ function openGrp() {
     box.appendChild(item);
   });
   document.getElementById('g-mod').style.display = 'flex';
-}
-function closeGrp() { document.getElementById('g-mod').style.display = 'none'; }
-function saveGrp() {
+};
+document.getElementById('gcan').onclick = function() { document.getElementById('g-mod').style.display = 'none'; };
+document.getElementById('gcre').onclick = function() {
   var gn = document.getElementById('g-name').value.trim();
   if (!gn || selMembers.size === 0) { alert('Group naam aur kam se kam 1 dost chunein!'); return; }
   sk.emit('create group', { groupName: gn, memberIds: Array.from(selMembers) });
-  closeGrp();
-}
+  document.getElementById('g-mod').style.display = 'none';
+};
 
 function renderList() {
   var b = document.getElementById('cl'); b.innerHTML = '';
@@ -286,19 +293,20 @@ function renderList() {
   });
 }
 
-function goHome() { fid = null; isGrpChat = false; document.getElementById('sc').style.display = 'none'; document.getElementById('sh').style.display = 'flex'; renderList(); }
-function clearMsgs() { if (fid && confirm('Saare messages delete karein?')) { ch[fid] = []; try { localStorage.setItem('zip_chats', JSON.stringify(ch)); } catch(e) {} document.getElementById('ms').innerHTML = ''; } }
+document.getElementById('bbk').onclick = function() { fid = null; isGrpChat = false; document.getElementById('sc').style.display = 'none'; document.getElementById('sh').style.display = 'flex'; renderList(); };
+document.getElementById('bclr').onclick = function() { if (fid && confirm('Saare messages delete karein?')) { ch[fid] = []; try { localStorage.setItem('zip_chats', JSON.stringify(ch)); } catch(e) {} document.getElementById('ms').innerHTML = ''; } };
 
-function sendText(e) {
+document.getElementById('fmsg').onsubmit = function(e) {
   e.preventDefault();
   var i = document.getElementById('tm');
   if (i.value.trim() && fid) {
     sk.emit('private message', { toUserId: fid, msgId: 'm_' + Date.now(), text: i.value.trim(), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), isGroup: isGrpChat });
     i.value = '';
   }
-}
+};
 
-function sendFile(e) {
+document.getElementById('batt').onclick = function() { document.getElementById('fm').click(); };
+document.getElementById('fm').onchange = function(e) {
   var f = e.target.files[0];
   if (!f || !fid || f.size > 20 * 1024 * 1024) return;
   var r = new FileReader();
@@ -306,7 +314,7 @@ function sendFile(e) {
     sk.emit('private message', { toUserId: fid, msgId: 'm_' + Date.now(), mediaData: v.target.result, mediaType: f.type.startsWith('video/') ? 'video' : 'image', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), isGroup: isGrpChat });
   };
   r.readAsDataURL(f); e.target.value = '';
-}
+};
 
 sk.on('private message', function(d) {
   var id = d.isGroup ? d.toUserId : (d.fromUserId === me.id ? d.toUserId : d.fromUserId);
@@ -327,13 +335,6 @@ function appendMsg(d) {
   var gs = (d.isGroup && !m) ? '<span class="g-sender">' + d.senderName + '</span>' : '';
   var md = d.mediaData ? (d.mediaType === 'video' ? '<video src="' + d.mediaData + '" controls class="med"></video>' : '<img src="' + d.mediaData + '" class="med">') : '';
   var th = d.text ? '<span id="txt-' + d.msgId + '">' + d.text + (d.edited ? ' <i style="font-size:10px;color:#667781">(edited)</i>' : '') + '</span>' : '';
-  var eb = (m && d.text && fid !== AI.id) ? '<button type="button" class="m-act" onclick="editMsg(\'' + d.msgId + '\')">✏️</button>' : '';
-  var db = (m && fid !== AI.id) ? '<button type="button" class="m-act" onclick="delMsg(\'' + d.msgId + '\')">🗑️</button>' : '';
-  v.innerHTML = gs + md + th + '<div class="meta">' + eb + db + '<span>' + d.time + '</span>' + (m && !d.isGroup ? ' <span class="' + (d.seen ? 'seen' : '') + '" id="tk-' + d.msgId + '">' + (d.seen ? '✓✓' : '✓') + '</span>' : '') + '</div>';
-  var b = document.getElementById('ms'); b.appendChild(v); b.scrollTop = b.scrollHeight;
-}
-
-function editMsg(id) {
-  if (!fid) return;
-  var o = (ch[fid] || []).find(function(x) { return x.msgId === id; });
-  if (!o) r
+  var eb = (m && d.text && fid !== AI.id) ? '<button type="button" class="m-act" data-e="' + d.msgId + '">✏️</button>' : '';
+  var db = (m && fid !== AI.id) ? '<button type="button" class="m-act" data-d="' + d.msgId + '">🗑️</button>' : '';
+  v.innerHTML = gs + md + th + '<div class="meta">' + eb + db + '<span>' + d.time + '</span>' + (m && !d.i
