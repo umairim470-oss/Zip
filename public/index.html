@@ -37,11 +37,11 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .seen{color:#53bdeb;font-weight:700}
 .bar{background:#f0f2f5;padding:9px 10px;display:flex;gap:8px;align-items:center}
 .bar input[type=text]{flex:1;padding:11px 15px;border:none;border-radius:22px;font-size:15px;outline:none;background:#fff}
-.c-ov{position:fixed;inset:0;background:rgba(11,20,26,.98);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:26px 18px;color:#fff}
-.v-box{width:100%;flex:1;position:relative;margin:14px 0;background:#1f2c34;border-radius:14px;overflow:hidden}
-#r-vid{width:100%;height:100%;object-fit:cover;background:#000}
-#l-vid{width:110px;height:155px;object-fit:cover;position:absolute;bottom:12px;right:12px;border-radius:12px;border:2px solid #25d366;background:#000;transform:scaleX(-1)}
-.c-btn{width:60px;height:60px;border-radius:50%;border:none;font-size:22px;color:#fff;cursor:pointer;display:flex;justify-content:center;align-items:center}
+.c-ov{position:fixed;inset:0;background:rgba(11,20,26,.96);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:30px 20px;color:#fff}
+.v-box{width:100%;flex:1;position:relative;margin:15px 0;background:#1f2c34;border-radius:12px;overflow:hidden}
+#r-vid{width:100%;height:100%;object-fit:cover}
+#l-vid{width:100px;height:140px;object-fit:cover;position:absolute;bottom:10px;right:10px;border-radius:10px;border:2px solid #25d366}
+.c-btn{width:58px;height:58px;border-radius:50%;border:none;font-size:22px;color:#fff;cursor:pointer}
 </style>
 </head>
 <body>
@@ -49,7 +49,7 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="reg" id="s-reg">
     <div class="badge">⚡</div>
     <h2>Welcome to Zip</h2>
-    <p>Sirf ek baar naam aur gender daalein, bina invite link ke direct chat shuru hogi:</p>
+    <p>Sirf ek baar naam aur gender daalein:</p>
     <input type="text" id="u-name" class="inp" placeholder="Enter your 5 word name">
     <div class="g-box">
       <button type="button" class="g-btn" id="b-m">👨 Male</button>
@@ -62,7 +62,7 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="home" id="s-home">
     <div class="hdr">
       <div class="hdr-l"><div class="av">⚡</div><div><h3>Welcome to Zip</h3><p id="my-tag" style="font-size:11px;color:#d9fdd3"></p></div></div>
-      <button type="button" class="inv-btn" id="b-inv">Share App</button>
+      <button type="button" class="inv-btn" id="b-inv">+ Invite Link</button>
     </div>
     <div class="list" id="c-list"></div>
   </div>
@@ -89,14 +89,10 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   </div>
 
   <div class="c-ov" id="s-call">
-    <div style="text-align:center"><h3 id="c-tit">Calling...</h3><p id="c-st" style="color:#25d366">Camera On...</p></div>
-    <div class="v-box">
-      <video id="r-vid" autoplay playsinline></video>
-      <video id="l-vid" autoplay playsinline muted></video>
-    </div>
-    <div style="display:flex;gap:22px">
+    <div style="text-align:center"><h3 id="c-tit">Calling...</h3><p id="c-st" style="color:#25d366">Connecting...</p></div>
+    <div class="v-box"><video id="r-vid" autoplay playsinline></video><video id="l-vid" autoplay playsinline muted></video></div>
+    <div style="display:flex;gap:24px">
       <button type="button" class="c-btn" id="b-acc" style="background:#25d366;display:none">📞</button>
-      <button type="button" class="c-btn" id="b-flip" style="background:#37474f;display:none" title="Flip Camera">🔄</button>
       <button type="button" class="c-btn" id="b-end" style="background:#e53935">📵</button>
     </div>
   </div>
@@ -105,12 +101,13 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const socket = typeof io !== 'undefined' ? io() : {emit:()=>{},on:()=>{}};
+const invFrom = new URLSearchParams(location.search).get('invite');
 let me = null; try{ me = JSON.parse(localStorage.getItem('zip_user')); }catch(e){}
 let chats = {}; try{ chats = JSON.parse(localStorage.getItem('zip_chats')) || {}; }catch(e){}
 let contacts = []; try{ contacts = JSON.parse(localStorage.getItem('zip_contacts')) || []; }catch(e){}
 let unread = {};
-let fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null, facingMode = 'user';
-const rtc = {iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]};
+let fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null;
+const rtc = {iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
 
 document.getElementById('b-m').onclick = () => { gen='Male'; document.getElementById('b-m').classList.add('act'); document.getElementById('b-f').classList.remove('act'); };
 document.getElementById('b-f').onclick = () => { gen='Female'; document.getElementById('b-f').classList.add('act'); document.getElementById('b-m').classList.remove('act'); };
@@ -127,15 +124,16 @@ function boot(){
   document.getElementById('s-reg').style.display='none';
   document.getElementById('s-home').style.display='flex';
   document.getElementById('my-tag').innerText = me.name+' ('+me.gender+')';
-  socket.emit('register',{userId:me.id,name:me.name,gender:me.gender});
+  socket.emit('register',{userId:me.id,name:me.name,gender:me.gender,inviteFrom:invFrom});
+  if(invFrom) history.replaceState({},'',location.pathname);
   drawList();
 }
 if(me && me.id && me.name) boot();
 socket.on('connect',()=>{ if(me) socket.emit('register',{userId:me.id,name:me.name,gender:me.gender}); });
 
 document.getElementById('b-inv').onclick = () => {
-  const u = location.origin;
-  if(navigator.clipboard) navigator.clipboard.writeText(u).then(()=>alert('App Link copy ho gaya! Kisi ko bhi bhejein, direct open hoga.')).catch(()=>prompt('Copy karein:',u));
+  const u = location.origin+'/?invite='+me.id;
+  if(navigator.clipboard) navigator.clipboard.writeText(u).then(()=>alert('Invite Link copy ho gaya!')).catch(()=>prompt('Copy karein:',u));
   else prompt('Copy karein:',u);
 };
 
@@ -156,7 +154,7 @@ socket.on('contact list',(l)=>{
 function drawList(){
   const box = document.getElementById('c-list');
   if(!contacts.length){
-    box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi user online nahi hai</h3><p style="margin-top:8px">Jaise hi koi app kholega, uska naam apne aap yahan aa jayega.</p></div>';
+    box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi dost nahi juda</h3><p style="margin-top:8px">Upar <b>+ Invite Link</b> daba kar dost ko link bhejein. Jaise hi woh judenge ya message karenge, unki chat yahan aa jayegi.</p></div>';
     return;
   }
   box.innerHTML='';
@@ -165,7 +163,7 @@ function drawList(){
     const r = document.createElement('div'); r.className='row';
     r.innerHTML='<div class="av">'+f.name[0].toUpperCase()+(f.online?'<span class="dot"></span>':'')+'</div>'+
       '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>'+f.name+' ('+f.gender+')</b><span style="font-size:11px;color:'+(uCount?'#25d366':'#667781')+'">'+(last?last.time:'')+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):(f.online?'Online • Tap to chat':'Tap to chat'))+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
+      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):'Tap to chat')+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
     r.onclick = ()=>{
       fid = f.id;
       unread[f.id] = 0;
@@ -211,11 +209,13 @@ document.getElementById('f-med').onchange = (e)=>{
 socket.on('private message',(d)=>{
   const id = d.fromUserId===me.id ? d.toUserId : d.fromUserId;
   if(!chats[id]) chats[id]=[];
+  // Duplicate message prevent karein
   if(!chats[id].some(x => x.msgId === d.msgId)){
     chats[id].push(d);
     try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
   }
 
+  // Agar naya sender hai toh list mein add karein aur sabse upar layein
   const existingIdx = contacts.findIndex(c => c.id === id);
   if(existingIdx === -1 && d.fromUserId !== me.id){
     contacts.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
@@ -247,111 +247,46 @@ socket.on('message seen',({fromUserId,msgId})=>{
   const t=document.getElementById('tk-'+msgId); if(t){ t.innerText='✓✓'; t.classList.add('seen'); }
 });
 
-// Direct Camera & Mic Access On for Video/Voice Call
 async function setupP(tp){
-  cType=tp;
-  if(lStream){ lStream.getTracks().forEach(t=>t.stop()); }
-  const constraints = tp === 'video'
-    ? { audio: true, video: { facingMode: facingMode } }
-    : { audio: true, video: false };
-
-  lStream = await navigator.mediaDevices.getUserMedia(constraints);
-  const localVid = document.getElementById('l-vid');
-  localVid.srcObject = lStream;
-  localVid.style.display = tp === 'video' ? 'block' : 'none';
-  document.getElementById('b-flip').style.display = tp === 'video' ? 'flex' : 'none';
-  if(tp === 'video') localVid.play().catch(()=>{});
-
-  pc = new RTCPeerConnection(rtc);
-  lStream.getTracks().forEach(t => pc.addTrack(t, lStream));
-  pc.ontrack = (e) => {
-    const remoteVid = document.getElementById('r-vid');
-    remoteVid.srcObject = e.streams[0];
-    remoteVid.play().catch(()=>{});
-  };
-  pc.onicecandidate = (e) => {
-    if(e.candidate && cTarget) socket.emit('ice-candidate', {toUserId: cTarget, candidate: e.candidate});
-  };
+  cType=tp; lStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tp==='video'});
+  document.getElementById('l-vid').srcObject=lStream; document.getElementById('l-vid').style.display=tp==='video'?'block':'none';
+  pc=new RTCPeerConnection(rtc); lStream.getTracks().forEach(t=>pc.addTrack(t,lStream));
+  pc.ontrack=(e)=>{document.getElementById('r-vid').srcObject=e.streams[0];};
+  pc.onicecandidate=(e)=>{if(e.candidate && cTarget) socket.emit('ice-candidate',{toUserId:cTarget,candidate:e.candidate});};
 }
-
-// Front/Back Camera Flip button
-document.getElementById('b-flip').onclick = async () => {
-  if(cType !== 'video' || !pc) return;
-  facingMode = facingMode === 'user' ? 'environment' : 'user';
-  try{
-    const newStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { facingMode: facingMode } });
-    const newVideoTrack = newStream.getVideoTracks()[0];
-    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
-    if(sender) await sender.replaceTrack(newVideoTrack);
-    if(lStream) lStream.getVideoTracks().forEach(t => t.stop());
-    lStream = newStream;
-    document.getElementById('l-vid').srcObject = lStream;
-    document.getElementById('l-vid').style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'none';
-  }catch(e){}
-};
 
 async function callNow(tp){
   if(!fid) return;
   try{
-    cTarget = fid;
-    document.getElementById('s-call').style.display = 'flex';
-    document.getElementById('c-tit').innerText = tp === 'video' ? 'Video Calling...' : 'Voice Calling...';
-    document.getElementById('c-st').innerText = 'Camera On • Ringing...';
-    document.getElementById('b-acc').style.display = 'none';
-    await setupP(tp);
-    const off = await pc.createOffer();
-    await pc.setLocalDescription(off);
-    socket.emit('call-user', {toUserId: cTarget, offer: off, callType: tp});
-  }catch(e){
-    alert('Video Call ke liye browser popup mein Camera aur Mic ko Allow karein!');
-    stopC(false);
-  }
+    cTarget=fid; document.getElementById('s-call').style.display='flex';
+    document.getElementById('c-tit').innerText=tp==='video'?'Video Calling...':'Voice Calling...';
+    document.getElementById('c-st').innerText='Ringing...'; document.getElementById('b-acc').style.display='none';
+    await setupP(tp); const off=await pc.createOffer(); await pc.setLocalDescription(off);
+    socket.emit('call-user',{toUserId:cTarget,offer:off,callType:tp});
+  }catch(e){ alert('Camera/Mic allow karein!'); stopC(false); }
 }
-document.getElementById('b-acall').onclick = () => callNow('audio');
-document.getElementById('b-vcall').onclick = () => callNow('video');
+document.getElementById('b-acall').onclick=()=>callNow('audio');
+document.getElementById('b-vcall').onclick=()=>callNow('video');
 
-socket.on('incoming-call', ({fromUserId, callerName, offer, callType}) => {
-  cTarget = fromUserId; pOffer = offer; cType = callType;
-  document.getElementById('s-call').style.display = 'flex';
-  document.getElementById('c-tit').innerText = callerName;
-  document.getElementById('c-st').innerText = callType === 'video' ? 'Incoming Video Call...' : 'Incoming Voice Call...';
-  document.getElementById('b-acc').style.display = 'flex';
+socket.on('incoming-call',({fromUserId,callerName,offer,callType})=>{
+  cTarget=fromUserId; pOffer=offer; cType=callType;
+  document.getElementById('s-call').style.display='flex'; document.getElementById('c-tit').innerText=callerName;
+  document.getElementById('c-st').innerText=callType==='video'?'Incoming Video Call...':'Incoming Voice Call...';
+  document.getElementById('b-acc').style.display='inline-block';
 });
 
-document.getElementById('b-acc').onclick = async () => {
-  try{
-    document.getElementById('b-acc').style.display = 'none';
-    document.getElementById('c-st').innerText = 'Connected';
-    await setupP(cType);
-    await pc.setRemoteDescription(new RTCSessionDescription(pOffer));
-    const ans = await pc.createAnswer();
-    await pc.setLocalDescription(ans);
-    socket.emit('answer-call', {toUserId: cTarget, answer: ans});
-  }catch(e){
-    alert('Camera aur Mic permission Allow karein!');
-    stopC(true);
-  }
+document.getElementById('b-acc').onclick=async()=>{
+  document.getElementById('b-acc').style.display='none'; document.getElementById('c-st').innerText='Connected';
+  await setupP(cType); await pc.setRemoteDescription(new RTCSessionDescription(pOffer));
+  const ans=await pc.createAnswer(); await pc.setLocalDescription(ans);
+  socket.emit('answer-call',{toUserId:cTarget,answer:ans});
 };
 
-socket.on('call-answered', async ({answer}) => {
-  document.getElementById('c-st').innerText = 'Connected';
-  if(pc) await pc.setRemoteDescription(new RTCSessionDescription(answer));
-});
-
-socket.on('ice-candidate', async ({candidate}) => {
-  if(pc && candidate) try{ await pc.addIceCandidate(new RTCIceCandidate(candidate)); }catch(e){}
-});
-
-function stopC(n){
-  if(n && cTarget) socket.emit('end-call', {toUserId: cTarget});
-  if(lStream){ lStream.getTracks().forEach(t => t.stop()); lStream = null; }
-  if(pc){ pc.close(); pc = null; }
-  cTarget = null;
-  document.getElementById('b-flip').style.display = 'none';
-  document.getElementById('s-call').style.display = 'none';
-}
-document.getElementById('b-end').onclick = () => stopC(true);
-socket.on('call-ended', () => stopC(false));
+socket.on('call-answered',async({answer})=>{ document.getElementById('c-st').innerText='Connected'; if(pc) await pc.setRemoteDescription(new RTCSessionDescription(answer)); });
+socket.on('ice-candidate',async({candidate})=>{ if(pc&&candidate) try{await pc.addIceCandidate(new RTCIceCandidate(candidate));}catch(e){} });
+function stopC(n){ if(n&&cTarget) socket.emit('end-call',{toUserId:cTarget}); if(lStream){lStream.getTracks().forEach(t=>t.stop());lStream=null;} if(pc){pc.close();pc=null;} cTarget=null; document.getElementById('s-call').style.display='none'; }
+document.getElementById('b-end').onclick=()=>stopC(true);
+socket.on('call-ended',()=>stopC(false));
 </script>
 </body>
 </html>
