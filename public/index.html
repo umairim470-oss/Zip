@@ -14,14 +14,14 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .ai-av{background:#5e35b1;color:#fff}
 .grp-av{background:#0288d1;color:#fff}
 .dot{width:10px;height:10px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
-.btn-s{background:#25d366;color:#fff;border:none;padding:7px 11px;border-radius:18px;font-weight:700;font-size:11.5px;cursor:pointer}
-.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer}
-.reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:14px}
-.inp{width:100%;max-width:290px;padding:13px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center}
+.btn-s{background:#25d366;color:#fff;border:none;padding:8px 12px;border-radius:18px;font-weight:700;font-size:12px;cursor:pointer}
+.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:15px;cursor:pointer}
+.reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:14px;overflow-y:auto}
+.inp{width:100%;max-width:290px;padding:14px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;background:#fff}
 .g-box{display:flex;gap:12px;width:100%;max-width:290px}
-.g-btn{flex:1;padding:14px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.g-btn{flex:1;padding:15px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation}
 .act{border-color:#008069;background:#d9fdd3;color:#008069}
-.go{background:#008069;color:#fff;border:none;padding:15px 34px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer}
+.go{width:100%;max-width:290px;background:#008069;color:#fff;border:none;padding:16px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation}
 .home,.chat{flex:1;display:none;flex-direction:column;overflow:hidden}
 .chat{background:#efeae2}
 .list,.msgs{flex:1;overflow-y:auto}
@@ -34,18 +34,14 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .g-sender{font-size:11px;font-weight:700;color:#008069;display:block;margin-bottom:2px}
 .med{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:4px 0}
 .meta{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:4px;font-size:10px;color:#667781}
-.m-act{background:none;border:none;font-size:12px;cursor:pointer;padding:1px 3px;opacity:.75}
+.m-act{background:none;border:none;font-size:13px;cursor:pointer;padding:2px 4px}
 .seen{color:#53bdeb;font-weight:700}
 .bar{background:#f0f2f5;padding:8px 10px;display:flex;gap:8px;align-items:center}
 .bar input[type=text]{flex:1;padding:11px 14px;border:none;border-radius:20px;font-size:15px;outline:none}
-
-/* Group Modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;justify-content:center;align-items:center;padding:16px}
 .m-box{background:#fff;width:100%;max-width:360px;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;max-height:80vh}
 .m-list{overflow-y:auto;max-height:220px;border:1px solid #eee;border-radius:8px}
 .m-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f5f5f5;cursor:pointer}
-
-/* Call Overlay */
 .c-ov{position:fixed;inset:0;background:#0b141a;z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:24px 16px;color:#fff}
 .v-box{width:100%;flex:1;position:relative;margin:12px 0;background:#1f2c34;border-radius:12px;overflow:hidden;display:flex;justify-content:center;align-items:center}
 #rv{width:100%;height:100%;object-fit:cover}
@@ -59,44 +55,41 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 </head>
 <body>
 <div class="app">
-  <!-- Registration Screen -->
   <div class="reg" id="sr">
     <div style="font-size:44px">⚡</div>
     <h2>Welcome to Zip</h2>
     <input type="text" id="un" class="inp" placeholder="Enter your 5 word name">
     <div class="g-box">
-      <div class="g-btn" id="bm" onclick="sg('Male')">👨 Male</div>
-      <div class="g-btn" id="bf" onclick="sg('Female')">👩 Female</div>
+      <button type="button" class="g-btn" id="bm" onclick="sg('Male')">👨 Male</button>
+      <button type="button" class="g-btn" id="bf" onclick="sg('Female')">👩 Female</button>
     </div>
-    <div id="er" style="color:red;font-size:13px;display:none">5 akshar ka naam aur Gender chunein!</div>
-    <div class="go" onclick="ga()">Aage Badhein</div>
+    <div id="er" style="color:red;font-size:13px;font-weight:700;display:none">5 akshar ka naam aur Gender chunein!</div>
+    <button type="button" class="go" id="bgo" onclick="ga()">Aage Badhein</button>
   </div>
 
-  <!-- Home List Screen -->
   <div class="home" id="sh">
     <div class="hdr">
       <div class="hdr-l"><div class="av">⚡</div><div><h3>Welcome to Zip</h3><p id="mt" style="font-size:11px;color:#d9fdd3"></p></div></div>
       <div style="display:flex;gap:6px">
-        <button class="btn-s" onclick="openGrpModal()">+ Group</button>
-        <button class="ic" onclick="an()">🔔</button>
-        <button class="btn-s" onclick="sa()">Share</button>
+        <button type="button" class="btn-s" onclick="openGrpModal()">+ Group</button>
+        <button type="button" class="ic" onclick="an()">🔔</button>
+        <button type="button" class="btn-s" onclick="sa()">Share</button>
       </div>
     </div>
     <div class="list" id="cl"></div>
   </div>
 
-  <!-- Chat Screen -->
   <div class="chat" id="sc">
     <div class="hdr">
       <div class="hdr-l">
-        <button onclick="bh()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">←</button>
+        <button type="button" onclick="bh()" style="background:none;border:none;color:#fff;font-size:22px">←</button>
         <div class="av" id="fa">U</div>
         <div style="overflow:hidden"><h3 id="fn" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Friend</h3><p id="fs" style="font-size:11px">Offline</p></div>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
-        <button class="ic" id="b-clr" onclick="clearChat()" title="Clear Chat">🗑️</button>
-        <button class="ic" id="b-ac" onclick="cn('audio')">📞</button>
-        <button class="ic" id="b-vc" onclick="cn('video')">📹</button>
+        <button type="button" class="ic" onclick="clearChat()">🗑️</button>
+        <button type="button" class="ic" id="b-ac" onclick="cn('audio')">📞</button>
+        <button type="button" class="ic" id="b-vc" onclick="cn('video')">📹</button>
       </div>
     </div>
     <div class="msgs" id="ms"></div>
@@ -108,12 +101,10 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
     </form>
   </div>
 
-  <!-- Create Group Modal -->
   <div class="modal" id="g-mod">
     <div class="m-box">
       <h3>Naya Group Banayein 👥</h3>
       <input type="text" id="g-name" class="inp" style="max-width:100%" placeholder="Group ka naam likhein...">
-      <p style="font-size:12px;color:#667781">Members chunein:</p>
       <div class="m-list" id="g-members"></div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button type="button" onclick="closeGrpModal()" style="padding:10px 16px;border:none;border-radius:20px;background:#eee">Cancel</button>
@@ -122,17 +113,16 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
     </div>
   </div>
 
-  <!-- Call Overlay -->
   <div class="c-ov" id="so">
     <div style="text-align:center"><h3 id="ct">Calling...</h3><p id="cs" style="color:#25d366">Connecting...</p></div>
     <div class="v-box"><div class="hb" id="hb">⏸️ On Hold</div><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video></div>
     <div class="cc">
-      <div class="cw" id="wa" style="display:none"><button class="cb" onclick="ac()" style="background:#25d366">📞</button><span>Accept</span></div>
-      <div class="cw"><button class="cb" id="bmu" onclick="tm()">🎤</button><span>Mute</span></div>
-      <div class="cw"><button class="cb" id="bsp" onclick="ts()">🔊</button><span>Speaker</span></div>
-      <div class="cw"><button class="cb" id="bho" onclick="th()">⏸️</button><span>Hold</span></div>
-      <div class="cw" id="wf" style="display:none"><button class="cb" onclick="fc()">🔄</button><span>Flip</span></div>
-      <div class="cw"><button class="cb" onclick="ec(true)" style="background:#e53935">📵</button><span>End</span></div>
+      <div class="cw" id="wa" style="display:none"><button type="button" class="cb" onclick="ac()" style="background:#25d366">📞</button><span>Accept</span></div>
+      <div class="cw"><button type="button" class="cb" id="bmu" onclick="tm()">🎤</button><span>Mute</span></div>
+      <div class="cw"><button type="button" class="cb" id="bsp" onclick="ts()">🔊</button><span>Speaker</span></div>
+      <div class="cw"><button type="button" class="cb" id="bho" onclick="th()">⏸️</button><span>Hold</span></div>
+      <div class="cw" id="wf" style="display:none"><button type="button" class="cb" onclick="fc()">🔄</button><span>Flip</span></div>
+      <div class="cw"><button type="button" class="cb" onclick="ec(true)" style="background:#e53935">📵</button><span>End</span></div>
     </div>
   </div>
 </div>
@@ -148,13 +138,22 @@ let ur={},fid=null,isGrpChat=false,gen='',ls=null,pc=null,po=null,ctp='video',ct
 const rtc={iceServers:[{urls:'stun:stun.l.google.com:19302'}]},AI={id:'zip_ai_bot',name:'Zip AI',gender:'AI',online:true};
 
 function tone(c){try{const x=new(window.AudioContext||window.webkitAudioContext)(),o=x.createOscillator(),g=x.createGain();o.frequency.value=c?880:660;g.gain.value=.15;o.connect(g);g.connect(x.destination);o.start();o.stop(x.currentTime+.3)}catch(e){}if(navigator.vibrate)navigator.vibrate(c?[300,150,300]:150)}
-function an(){if('Notification'in window)Notification.requestPermission()}
-function pn(t,b){if('Notification'in window&&Notification.permission==='granted')try{new Notification(t,{body:b})}catch(e){}}
+function an(){try{if('Notification'in window)Notification.requestPermission()}catch(e){}}
+function pn(t,b){try{if('Notification'in window&&Notification.permission==='granted')new Notification(t,{body:b})}catch(e){}}
 
-function sg(g){gen=g;document.getElementById('bm').classList.toggle('act',g==='Male');document.getElementById('bf').classList.toggle('act',g==='Female')}
+function sg(g){
+  gen=g;
+  document.getElementById('bm').classList.toggle('act',g==='Male');
+  document.getElementById('bf').classList.toggle('act',g==='Female');
+  document.getElementById('er').style.display='none';
+}
 function ga(){
-  const n=document.getElementById('un').value.trim();
-  if(n.length<5||!gen){document.getElementById('er').style.display='block';return}
+  const inp=document.getElementById('un');
+  inp.blur();
+  const n=inp.value.trim();
+  if(n.length<5){document.getElementById('er').innerText='Naam kam se kam 5 akshar ka likhein!';document.getElementById('er').style.display='block';return}
+  if(!gen){document.getElementById('er').innerText='Male ya Female par touch karke chunein!';document.getElementById('er').style.display='block';return}
+  document.getElementById('er').style.display='none';
   me={id:'u_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),name:n,gender:gen};
   try{localStorage.setItem('zip_user',JSON.stringify(me))}catch(e){}
   an();bt();
@@ -173,55 +172,38 @@ sk.on('contact list',l=>{
   try{localStorage.setItem('zip_contacts',JSON.stringify(ct))}catch(e){}dl();
   if(fid&&!isGrpChat&&fid!==AI.id){const f=ct.find(c=>c.id===fid);if(f)document.getElementById('fs').innerText=f.online?'Online':'Offline'}
 });
+sk.on('group list',gl=>{grps=gl;try{localStorage.setItem('zip_groups',JSON.stringify(grps))}catch(e){}dl()});
 
-sk.on('group list',gl=>{
-  grps=gl;
-  try{localStorage.setItem('zip_groups',JSON.stringify(grps))}catch(e){}
-  dl();
-});
-
-// Group Modal Functions
-let selectedMembers = new Set();
+let selectedMembers=new Set();
 function openGrpModal(){
-  selectedMembers.clear();
-  document.getElementById('g-name').value='';
-  const box=document.getElementById('g-members'); box.innerHTML='';
-  if(!ct.length){ box.innerHTML='<p style="padding:12px;font-size:13px;color:#667781">Abhi koi dost list mein nahi hai.</p>'; }
+  selectedMembers.clear();document.getElementById('g-name').value='';
+  const box=document.getElementById('g-members');box.innerHTML='';
+  if(!ct.length)box.innerHTML='<p style="padding:12px;font-size:13px;color:#667781">Abhi koi dost list mein nahi hai.</p>';
   ct.forEach(f=>{
-    const item=document.createElement('div'); item.className='m-item';
+    const item=document.createElement('div');item.className='m-item';
     item.innerHTML='<span>'+f.name+' ('+f.gender+')</span><input type="checkbox" style="width:18px;height:18px">';
-    item.onclick=()=>{
-      const cb=item.querySelector('input');
-      cb.checked=!cb.checked;
-      if(cb.checked) selectedMembers.add(f.id); else selectedMembers.delete(f.id);
-    };
+    item.onclick=()=>{const cb=item.querySelector('input');cb.checked=!cb.checked;if(cb.checked)selectedMembers.add(f.id);else selectedMembers.delete(f.id)};
     box.appendChild(item);
   });
   document.getElementById('g-mod').style.display='flex';
 }
-function closeGrpModal(){ document.getElementById('g-mod').style.display='none'; }
+function closeGrpModal(){document.getElementById('g-mod').style.display='none'}
 function createGrpNow(){
   const gn=document.getElementById('g-name').value.trim();
-  if(!gn){ alert('Group ka naam likhein!'); return; }
-  if(selectedMembers.size===0){ alert('Kam se kam 1 dost chunein!'); return; }
-  sk.emit('create group',{groupName:gn,memberIds:Array.from(selectedMembers)});
-  closeGrpModal();
+  if(!gn||selectedMembers.size===0){alert('Group naam aur kam se kam 1 dost chunein!');return}
+  sk.emit('create group',{groupName:gn,memberIds:Array.from(selectedMembers)});closeGrpModal();
 }
 
 function dl(){
   const b=document.getElementById('cl');b.innerHTML='';
-  const items=[AI, ...grps.map(g=>({...g,isGrp:true})), ...ct.filter(c=>c.id!==AI.id)];
-  items.forEach(f=>{
-    const ai=f.id===AI.id, grp=!!f.isGrp, m=ch[f.id]||[], la=m[m.length-1], uc=ur[f.id]||0;
-    const r=document.createElement('div');r.className='row';
-    const avClass = ai ? 'ai-av' : (grp ? 'grp-av' : '');
-    const avText = ai ? '🤖' : (grp ? '👥' : f.name[0].toUpperCase());
-    const subTitle = la ? (la.mediaType ? '📎 Media' : la.text) : (ai ? 'Ask AI' : (grp ? f.members.length + ' Members' : 'Tap to chat'));
-    r.innerHTML='<div class="av '+avClass+'">'+avText+(!grp&&f.online?'<span class="dot"></span>':'')+'</div><div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between"><b>'+f.name+(ai?' ✨':(grp?' (Group)':' ('+f.gender+')'))+'</b><span style="font-size:11px;color:#667781">'+(la?la.time:'')+'</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+subTitle+'</span>'+(uc?'<span class="bdg">'+uc+'</span>':'')+'</div></div>';
+  [AI,...grps.map(g=>({...g,isGrp:true})),...ct.filter(c=>c.id!==AI.id)].forEach(f=>{
+    const ai=f.id===AI.id,grp=!!f.isGrp,m=ch[f.id]||[],la=m[m.length-1],uc=ur[f.id]||0,r=document.createElement('div');r.className='row';
+    const avC=ai?'ai-av':(grp?'grp-av':''),avT=ai?'🤖':(grp?'👥':f.name[0].toUpperCase());
+    const sub=la?(la.mediaType?'📎 Media':la.text):(ai?'Ask AI':(grp?f.members.length+' Members':'Tap to chat'));
+    r.innerHTML='<div class="av '+avC+'">'+avT+(!grp&&f.online?'<span class="dot"></span>':'')+'</div><div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between"><b>'+f.name+(ai?' ✨':(grp?' (Group)':' ('+f.gender+')'))+'</b><span style="font-size:11px;color:#667781">'+(la?la.time:'')+'</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+sub+'</span>'+(uc?'<span class="bdg">'+uc+'</span>':'')+'</div></div>';
     r.onclick=()=>{
-      fid=f.id; isGrpChat=grp; ur[f.id]=0;
-      document.getElementById('sh').style.display='none';document.getElementById('sc').style.display='flex';
-      document.getElementById('fa').innerText=avText;document.getElementById('fa').className='av '+avClass;
+      fid=f.id;isGrpChat=grp;ur[f.id]=0;document.getElementById('sh').style.display='none';document.getElementById('sc').style.display='flex';
+      document.getElementById('fa').innerText=avT;document.getElementById('fa').className='av '+avC;
       document.getElementById('fn').innerText=ai?'Zip AI ✨':(grp?f.name:f.name+' ('+f.gender+')');
       document.getElementById('fs').innerText=grp?(f.members.length+' Members'):(f.online?'Online':'Offline');
       document.getElementById('b-ac').style.display=(ai||grp)?'none':'inline-block';
@@ -233,84 +215,34 @@ function dl(){
     };b.appendChild(r);
   });
 }
-
 function bh(){fid=null;isGrpChat=false;document.getElementById('sc').style.display='none';document.getElementById('sh').style.display='flex';dl()}
-
-// Clear Full Chat
-function clearChat(){
-  if(!fid) return;
-  if(confirm('Kya aap is chat ke saare messages delete karna chahte hain?')){
-    ch[fid]=[];
-    try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}
-    document.getElementById('ms').innerHTML='';
-  }
-}
-
+function clearChat(){if(fid&&confirm('Saare messages delete karein?')){ch[fid]=[];try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}document.getElementById('ms').innerHTML=''}}
 function st(e){e.preventDefault();const i=document.getElementById('tm');if(i.value.trim()&&fid){sk.emit('private message',{toUserId:fid,msgId:'m_'+Date.now(),text:i.value.trim(),time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),isGroup:isGrpChat});i.value=''}}
 function sm(e){const f=e.target.files[0];if(!f||!fid||f.size>20*1024*1024)return;const r=new FileReader();r.onload=v=>{sk.emit('private message',{toUserId:fid,msgId:'m_'+Date.now(),mediaData:v.target.result,mediaType:f.type.startsWith('video/')?'video':'image',time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),isGroup:isGrpChat})};r.readAsDataURL(f);e.target.value=''}
 
 sk.on('private message',d=>{
-  const id = d.isGroup ? d.toUserId : (d.fromUserId===me.id ? d.toUserId : d.fromUserId);
+  const id=d.isGroup?d.toUserId:(d.fromUserId===me.id?d.toUserId:d.fromUserId);
   if(!ch[id])ch[id]=[];
   if(!ch[id].some(x=>x.msgId===d.msgId)){ch[id].push(d);try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}}
-  if(!d.isGroup && id!==AI.id && ct.findIndex(c=>c.id===id)===-1 && d.fromUserId!==me.id){ct.unshift({id:d.fromUserId,name:d.senderName||'User',gender:d.senderGender||'',online:true});try{localStorage.setItem('zip_contacts',JSON.stringify(ct))}catch(e){}}
+  if(!d.isGroup&&id!==AI.id&&ct.findIndex(c=>c.id===id)===-1&&d.fromUserId!==me.id){ct.unshift({id:d.fromUserId,name:d.senderName||'User',gender:d.senderGender||'',online:true});try{localStorage.setItem('zip_contacts',JSON.stringify(ct))}catch(e){}}
   if(d.fromUserId!==me.id){tone(false);if(document.hidden||fid!==id)pn((d.senderName||'Zip')+' • Zip',d.mediaType?'📎 Media':d.text)}
   if(fid===id){am(d);if(!d.isGroup&&d.fromUserId!==me.id&&id!==AI.id)sk.emit('message seen',{toUserId:id,msgId:d.msgId})}else{if(d.fromUserId!==me.id)ur[id]=(ur[id]||0)+1;dl()}
 });
 
-// Render Message with Edit & Delete Options
 function am(d){
-  const m=d.fromUserId===me.id, v=document.createElement('div');
-  v.className='msg '+(m?'sent':'rcvd');
-  v.id='msg-box-'+d.msgId;
-  const gSender = (d.isGroup && !m) ? '<span class="g-sender">'+d.senderName+'</span>' : '';
+  const m=d.fromUserId===me.id,v=document.createElement('div');v.className='msg '+(m?'sent':'rcvd');v.id='msg-box-'+d.msgId;
+  const gs=(d.isGroup&&!m)?'<span class="g-sender">'+d.senderName+'</span>':'';
   const md=d.mediaData?(d.mediaType==='video'?'<video src="'+d.mediaData+'" controls class="med"></video>':'<img src="'+d.mediaData+'" class="med">'):'';
-  const txtHtml = d.text ? '<span id="txt-'+d.msgId+'">'+d.text+(d.edited?' <i style="font-size:10px;color:#667781">(edited)</i>':'')+'</span>' : '';
-  const editBtn = (m && d.text && fid!==AI.id) ? '<button type="button" class="m-act" onclick="editMsg(\''+d.msgId+'\')" title="Edit">✏️</button>' : '';
-  const delBtn = (m && fid!==AI.id) ? '<button type="button" class="m-act" onclick="delMsg(\''+d.msgId+'\')" title="Delete">🗑️</button>' : '';
-
-  v.innerHTML=gSender+md+txtHtml+'<div class="meta">'+editBtn+delBtn+'<span>'+d.time+'</span>'+(m&&!d.isGroup?' <span class="'+(d.seen?'seen':'')+'" id="tk-'+d.msgId+'">'+(d.seen?'✓✓':'✓')+'</span>':'')+'</div>';
+  const th=d.text?'<span id="txt-'+d.msgId+'">'+d.text+(d.edited?' <i style="font-size:10px;color:#667781">(edited)</i>':'')+'</span>':'';
+  const eb=(m&&d.text&&fid!==AI.id)?'<button type="button" class="m-act" onclick="editMsg(\''+d.msgId+'\')">✏️</button>':'';
+  const db=(m&&fid!==AI.id)?'<button type="button" class="m-act" onclick="delMsg(\''+d.msgId+'\')">🗑️</button>':'';
+  v.innerHTML=gs+md+th+'<div class="meta">'+eb+db+'<span>'+d.time+'</span>'+(m&&!d.isGroup?' <span class="'+(d.seen?'seen':'')+'" id="tk-'+d.msgId+'">'+(d.seen?'✓✓':'✓')+'</span>':'')+'</div>';
   const b=document.getElementById('ms');b.appendChild(v);b.scrollTop=b.scrollHeight;
 }
-
-// Edit Message Function
-function editMsg(msgId){
-  if(!fid) return;
-  const msgObj = (ch[fid]||[]).find(x=>x.msgId===msgId);
-  if(!msgObj) return;
-  const updated = prompt('Message edit karein:', msgObj.text);
-  if(updated && updated.trim() && updated.trim() !== msgObj.text){
-    sk.emit('edit message',{toUserId:fid,msgId:msgId,newText:updated.trim(),isGroup:isGrpChat});
-  }
-}
-
-sk.on('message edited',({chatId,msgId,newText})=>{
-  if(ch[chatId]){
-    const m=ch[chatId].find(x=>x.msgId===msgId);
-    if(m){ m.text=newText; m.edited=true; try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){} }
-  }
-  const el=document.getElementById('txt-'+msgId);
-  if(el) el.innerHTML=newText+' <i style="font-size:10px;color:#667781">(edited)</i>';
-});
-
-// Delete Message Function
-function delMsg(msgId){
-  if(!fid) return;
-  if(confirm('Ye message delete karein?')){
-    sk.emit('delete message',{toUserId:fid,msgId:msgId,isGroup:isGrpChat});
-  }
-}
-
-sk.on('message deleted',({chatId,msgId})=>{
-  if(ch[chatId]){
-    ch[chatId]=ch[chatId].filter(x=>x.msgId!==msgId);
-    try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}
-  }
-  const box=document.getElementById('msg-box-'+msgId);
-  if(box) box.remove();
-});
-
+function editMsg(id){if(!fid)return;const o=(ch[fid]||[]).find(x=>x.msgId===id);if(!o)return;const u=prompt('Message edit karein:',o.text);if(u&&u.trim()&&u.trim()!==o.text)sk.emit('edit message',{toUserId:fid,msgId:id,newText:u.trim(),isGroup:isGrpChat})}
+sk.on('message edited',({chatId,msgId,newText})=>{if(ch[chatId]){const m=ch[chatId].find(x=>x.msgId===msgId);if(m){m.text=newText;m.edited=true;try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}}}const el=document.getElementById('txt-'+msgId);if(el)el.innerHTML=newText+' <i style="font-size:10px;color:#667781">(edited)</i>'});
+function delMsg(id){if(fid&&confirm('Message delete karein?'))sk.emit('delete message',{toUserId:fid,msgId:id,isGroup:isGrpChat})}
+sk.on('message deleted',({chatId,msgId})=>{if(ch[chatId]){ch[chatId]=ch[chatId].filter(x=>x.msgId!==msgId);try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}}const box=document.getElementById('msg-box-'+msgId);if(box)box.remove()});
 sk.on('message seen',({fromUserId,msgId})=>{if(ch[fromUserId]){const m=ch[fromUserId].find(x=>x.msgId===msgId);if(m)m.seen=true;try{localStorage.setItem('zip_chats',JSON.stringify(ch))}catch(e){}}const t=document.getElementById('tk-'+msgId);if(t){t.innerText='✓✓';t.classList.add('seen')}});
 
-// Call Functions
-async function sp(tp){ctp=tp;mm=false;smu=false;oh=false;document.getElementById('bmu').classList.remove('on');document.getElementById('bsp').classList
+async function sp(tp){ctp=tp;mm=false;smu=false;oh=false;document.getElementById('bmu').classList.remove('on');document.getElementById('bsp').classList.remove('on');document.getElementById('bho').classList.remove('on');document.getElementById('hb').style.display='none';document.getElementById('rv').muted=false;if(ls)ls.getTracks().forEach(t=>t.stop());ls=await navigator.mediaDevices.getUserMedia({audio:true,video:tp==='video'?{facingMode:fmd}:false});const
