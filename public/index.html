@@ -14,19 +14,19 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .ai-av{background:#5e35b1;color:#fff}
 .grp-av{background:#0288d1;color:#fff}
 .dot{width:10px;height:10px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
-.btn-s{background:#25d366;color:#fff;border:none;padding:8px 12px;border-radius:18px;font-weight:700;font-size:12px}
-.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:15px}
+.btn-s{background:#25d366;color:#fff;border:none;padding:8px 12px;border-radius:18px;font-weight:700;font-size:12px;cursor:pointer}
+.ic{background:rgba(255,255,255,.2);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:15px;cursor:pointer}
 .reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:15px;overflow-y:auto}
 .inp{width:100%;max-width:290px;padding:14px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;background:#fff}
 .g-box{display:flex;gap:12px;width:100%;max-width:290px}
-.g-btn{flex:1;padding:15px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700}
+.g-btn{flex:1;padding:15px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
 .act{border-color:#008069;background:#d9fdd3;color:#008069}
-.go{width:100%;max-width:290px;background:#008069;color:#fff;border:none;padding:16px;border-radius:25px;font-size:16px;font-weight:700}
+.go{width:100%;max-width:290px;background:#008069;color:#fff;border:none;padding:16px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer}
 .home,.chat{flex:1;display:none;flex-direction:column;overflow:hidden}
 .chat{background:#efeae2}
 .list,.msgs{flex:1;overflow-y:auto}
 .msgs{padding:12px;display:flex;flex-direction:column;gap:8px}
-.row{display:flex;align-items:center;padding:13px 15px;border-bottom:1px solid #eee;gap:12px}
+.row{display:flex;align-items:center;padding:13px 15px;border-bottom:1px solid #eee;gap:12px;cursor:pointer}
 .bdg{background:#25d366;color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
 .msg{max-width:82%;padding:8px 11px;border-radius:10px;font-size:15px;word-wrap:break-word;white-space:pre-line}
 .sent{background:#d9fdd3;align-self:flex-end}
@@ -34,14 +34,14 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 .g-sender{font-size:11px;font-weight:700;color:#008069;display:block;margin-bottom:2px}
 .med{max-width:100%;max-height:220px;border-radius:8px;display:block;margin:4px 0}
 .meta{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin-top:4px;font-size:10px;color:#667781}
-.m-act{background:none;border:none;font-size:13px;padding:2px 4px}
+.m-act{background:none;border:none;font-size:13px;cursor:pointer;padding:2px 4px}
 .seen{color:#53bdeb;font-weight:700}
 .bar{background:#f0f2f5;padding:8px 10px;display:flex;gap:8px;align-items:center}
 .bar input[type=text]{flex:1;padding:11px 14px;border:none;border-radius:20px;font-size:15px;outline:none}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none;justify-content:center;align-items:center;padding:16px}
 .m-box{background:#fff;width:100%;max-width:360px;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;max-height:80vh}
 .m-list{overflow-y:auto;max-height:220px;border:1px solid #eee;border-radius:8px}
-.m-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f5f5f5}
+.m-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f5f5f5;cursor:pointer}
 .c-ov{position:fixed;inset:0;background:#0b141a;z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:24px 16px;color:#fff}
 .v-box{width:100%;flex:1;position:relative;margin:12px 0;background:#1f2c34;border-radius:12px;overflow:hidden;display:flex;justify-content:center;align-items:center}
 #rv{width:100%;height:100%;object-fit:cover}
@@ -58,7 +58,6 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
   <div class="reg" id="sr">
     <div style="font-size:44px">⚡</div>
     <h2>Welcome to Zip</h2>
-    <div id="js-ok" style="font-size:11px;color:#e53935">⏳ Loading script...</div>
     <input type="text" id="un" class="inp" placeholder="Enter your 5 word name">
     <div class="g-box">
       <button type="button" class="g-btn" id="bm">👨 Male</button>
@@ -130,211 +129,229 @@ html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-document.getElementById('js-ok').innerText = '✅ Ready';
-document.getElementById('js-ok').style.color = '#008069';
-
 var sk = { emit: function(){}, on: function(){} };
-try { if (typeof io !== 'undefined') sk = io(); } catch(e) {}
+try { if (typeof io !== "undefined") sk = io(); } catch(e) {}
 
 var me = null, ch = {}, ct = [], grps = [];
 try {
-  me = JSON.parse(localStorage.getItem('zip_user'));
-  ch = JSON.parse(localStorage.getItem('zip_chats')) || {};
-  ct = JSON.parse(localStorage.getItem('zip_contacts')) || [];
-  grps = JSON.parse(localStorage.getItem('zip_groups')) || [];
+  me = JSON.parse(localStorage.getItem("zip_user"));
+  ch = JSON.parse(localStorage.getItem("zip_chats")) || {};
+  ct = JSON.parse(localStorage.getItem("zip_contacts")) || [];
+  grps = JSON.parse(localStorage.getItem("zip_groups")) || [];
 } catch(e) {}
 
-var ur = {}, fid = null, isGrpChat = false, gen = '';
-var ls = null, pc = null, po = null, ctp = 'video', ctg = null, fmd = 'user';
+var ur = {}, fid = null, isGrpChat = false, gen = "";
+var ls = null, pc = null, po = null, ctp = "video", ctg = null, fmd = "user";
 var mm = false, smu = false, oh = false, rt = null;
-var rtc = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
-var AI = { id: 'zip_ai_bot', name: 'Zip AI', gender: 'AI', online: true };
+var rtc = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+var AI = { id: "zip_ai_bot", name: "Zip AI", gender: "AI", online: true };
 
-function pickG(g) {
-  gen = g;
-  document.getElementById('bm').className = g === 'Male' ? 'g-btn act' : 'g-btn';
-  document.getElementById('bf').className = g === 'Female' ? 'g-btn act' : 'g-btn';
-  document.getElementById('er').style.display = 'none';
-}
+document.getElementById("bm").onclick = function() {
+  gen = "Male";
+  document.getElementById("bm").className = "g-btn act";
+  document.getElementById("bf").className = "g-btn";
+  document.getElementById("er").style.display = "none";
+};
 
-document.getElementById('bm').onclick = function() { pickG('Male'); };
-document.getElementById('bf').onclick = function() { pickG('Female'); };
+document.getElementById("bf").onclick = function() {
+  gen = "Female";
+  document.getElementById("bf").className = "g-btn act";
+  document.getElementById("bm").className = "g-btn";
+  document.getElementById("er").style.display = "none";
+};
 
-document.getElementById('bgo').onclick = function() {
-  var inp = document.getElementById('un');
-  var er = document.getElementById('er');
+document.getElementById("bgo").onclick = function() {
+  var inp = document.getElementById("un");
+  var er = document.getElementById("er");
   var n = inp.value.trim();
   if (n.length < 5) {
-    er.innerText = 'Naam kam se kam 5 akshar ka likhein!';
-    er.style.display = 'block';
+    er.innerText = "Naam kam se kam 5 akshar ka likhein!";
+    er.style.display = "block";
     return;
   }
   if (!gen) {
-    er.innerText = 'Male ya Female par click karke chunein!';
-    er.style.display = 'block';
+    er.innerText = "Male ya Female chunein!";
+    er.style.display = "block";
     return;
   }
-  er.style.display = 'none';
-  me = { id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), name: n, gender: gen };
-  try { localStorage.setItem('zip_user', JSON.stringify(me)); } catch(e) {}
-  try { if ('Notification' in window) Notification.requestPermission(); } catch(e) {}
+  er.style.display = "none";
+  me = { id: "u_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6), name: n, gender: gen };
+  try { localStorage.setItem("zip_user", JSON.stringify(me)); } catch(e) {}
+  try { if ("Notification" in window) Notification.requestPermission(); } catch(e) {}
   openHome();
 };
 
 function openHome() {
-  document.getElementById('sr').style.display = 'none';
-  document.getElementById('sh').style.display = 'flex';
-  document.getElementById('mt').innerText = me.name + ' (' + me.gender + ')';
-  sk.emit('register', { userId: me.id, name: me.name, gender: me.gender });
+  document.getElementById("sr").style.display = "none";
+  document.getElementById("sh").style.display = "flex";
+  document.getElementById("mt").innerText = me.name + " (" + me.gender + ")";
+  sk.emit("register", { userId: me.id, name: me.name, gender: me.gender });
   renderList();
 }
 
 if (me && me.id && me.name) { openHome(); }
 
-sk.on('connect', function() {
-  if (me) sk.emit('register', { userId: me.id, name: me.name, gender: me.gender });
+sk.on("connect", function() {
+  if (me) sk.emit("register", { userId: me.id, name: me.name, gender: me.gender });
 });
 
-document.getElementById('bnot').onclick = function() {
-  try { if ('Notification' in window) Notification.requestPermission(); } catch(e) {}
+document.getElementById("bnot").onclick = function() {
+  try { if ("Notification" in window) Notification.requestPermission(); } catch(e) {}
 };
-document.getElementById('bshr').onclick = function() {
+
+document.getElementById("bshr").onclick = function() {
   var u = location.origin;
-  if (navigator.clipboard) navigator.clipboard.writeText(u).then(function() { alert('Link copied!'); });
-  else prompt('Copy link:', u);
+  if (navigator.clipboard) navigator.clipboard.writeText(u).then(function() { alert("Link copied!"); });
+  else prompt("Copy link:", u);
 };
 
 function sendNotif(t, b) {
-  try { if ('Notification' in window && Notification.permission === 'granted') new Notification(t, { body: b }); } catch(e) {}
+  try { if ("Notification" in window && Notification.permission === "granted") new Notification(t, { body: b }); } catch(e) {}
 }
+
 function tone(c) {
   try {
     var x = new (window.AudioContext || window.webkitAudioContext)();
     var o = x.createOscillator(), g = x.createGain();
-    o.frequency.value = c ? 880 : 660; g.gain.value = 0.15;
-    o.connect(g); g.connect(x.destination); o.start(); o.stop(x.currentTime + 0.3);
+    o.frequency.value = c ? 880 : 660;
+    g.gain.value = 0.15;
+    o.connect(g);
+    g.connect(x.destination);
+    o.start();
+    o.stop(x.currentTime + 0.3);
   } catch(e) {}
   if (navigator.vibrate) navigator.vibrate(c ? [300, 150, 300] : 150);
 }
 
-sk.on('contact list', function(l) {
+sk.on("contact list", function(l) {
   l.forEach(function(s) {
     var i = ct.findIndex(function(c) { return c.id === s.id; });
     if (i >= 0) ct[i] = s; else ct.unshift(s);
   });
-  try { localStorage.setItem('zip_contacts', JSON.stringify(ct)); } catch(e) {}
+  try { localStorage.setItem("zip_contacts", JSON.stringify(ct)); } catch(e) {}
   renderList();
   if (fid && !isGrpChat && fid !== AI.id) {
     var f = ct.find(function(c) { return c.id === fid; });
-    if (f) document.getElementById('fs').innerText = f.online ? 'Online' : 'Offline';
+    if (f) document.getElementById("fs").innerText = f.online ? "Online" : "Offline";
   }
 });
 
-sk.on('group list', function(gl) {
+sk.on("group list", function(gl) {
   grps = gl;
-  try { localStorage.setItem('zip_groups', JSON.stringify(grps)); } catch(e) {}
+  try { localStorage.setItem("zip_groups", JSON.stringify(grps)); } catch(e) {}
   renderList();
 });
 
 var selMembers = new Set();
-document.getElementById('bgrp').onclick = function() {
+document.getElementById("bgrp").onclick = function() {
   selMembers.clear();
-  document.getElementById('g-name').value = '';
-  var box = document.getElementById('g-members'); box.innerHTML = '';
-  if (!ct.length) box.innerHTML = '<p style="padding:12px;font-size:13px;color:#667781">Abhi koi dost list mein nahi hai.</p>';
+  document.getElementById("g-name").value = "";
+  var box = document.getElementById("g-members");
+  box.innerHTML = "";
+  if (!ct.length) box.innerHTML = "<p style='padding:12px;font-size:13px;color:#667781'>Abhi koi dost list mein nahi hai.</p>";
   ct.forEach(function(f) {
-    var item = document.createElement('div'); item.className = 'm-item';
-    item.innerHTML = '<span>' + f.name + ' (' + f.gender + ')</span><input type="checkbox" style="width:18px;height:18px">';
+    var item = document.createElement("div");
+    item.className = "m-item";
+    item.innerHTML = "<span>" + f.name + " (" + f.gender + ")</span><input type='checkbox' style='width:18px;height:18px'>";
     item.onclick = function() {
-      var cb = item.querySelector('input'); cb.checked = !cb.checked;
+      var cb = item.querySelector("input");
+      cb.checked = !cb.checked;
       if (cb.checked) selMembers.add(f.id); else selMembers.delete(f.id);
     };
     box.appendChild(item);
   });
-  document.getElementById('g-mod').style.display = 'flex';
+  document.getElementById("g-mod").style.display = "flex";
 };
-document.getElementById('gcan').onclick = function() { document.getElementById('g-mod').style.display = 'none'; };
-document.getElementById('gcre').onclick = function() {
-  var gn = document.getElementById('g-name').value.trim();
-  if (!gn || selMembers.size === 0) { alert('Group naam aur kam se kam 1 dost chunein!'); return; }
-  sk.emit('create group', { groupName: gn, memberIds: Array.from(selMembers) });
-  document.getElementById('g-mod').style.display = 'none';
+
+document.getElementById("gcan").onclick = function() { document.getElementById("g-mod").style.display = "none"; };
+document.getElementById("gcre").onclick = function() {
+  var gn = document.getElementById("g-name").value.trim();
+  if (!gn || selMembers.size === 0) { alert("Group naam aur kam se kam 1 dost chunein!"); return; }
+  sk.emit("create group", { groupName: gn, memberIds: Array.from(selMembers) });
+  document.getElementById("g-mod").style.display = "none";
 };
 
 function renderList() {
-  var b = document.getElementById('cl'); b.innerHTML = '';
+  var b = document.getElementById("cl");
+  b.innerHTML = "";
   var all = [AI].concat(grps.map(function(g) { return Object.assign({}, g, { isGrp: true }); })).concat(ct.filter(function(c) { return c.id !== AI.id; }));
   all.forEach(function(f) {
     var ai = f.id === AI.id, grp = !!f.isGrp, m = ch[f.id] || [], la = m[m.length - 1], uc = ur[f.id] || 0;
-    var r = document.createElement('div'); r.className = 'row';
-    var avC = ai ? 'ai-av' : (grp ? 'grp-av' : '');
-    var avT = ai ? '🤖' : (grp ? '👥' : f.name[0].toUpperCase());
-    var sub = la ? (la.mediaType ? '📎 Media' : la.text) : (ai ? 'Ask AI' : (grp ? f.members.length + ' Members' : 'Tap to chat'));
-    r.innerHTML = '<div class="av ' + avC + '">' + avT + (!grp && f.online ? '<span class="dot"></span>' : '') + '</div>' +
-      '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between"><b>' + f.name + (ai ? ' ✨' : (grp ? ' (Group)' : ' (' + f.gender + ')')) + '</b><span style="font-size:11px;color:#667781">' + (la ? la.time : '') + '</span></div>' +
-      '<div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + sub + '</span>' + (uc ? '<span class="bdg">' + uc + '</span>' : '') + '</div></div>';
+    var r = document.createElement("div");
+    r.className = "row";
+    var avC = ai ? "ai-av" : (grp ? "grp-av" : "");
+    var avT = ai ? "🤖" : (grp ? "👥" : f.name[0].toUpperCase());
+    var sub = la ? (la.mediaType ? "📎 Media" : la.text) : (ai ? "Ask AI" : (grp ? f.members.length + " Members" : "Tap to chat"));
+    r.innerHTML = "<div class='av " + avC + "'>" + avT + (!grp && f.online ? "<span class='dot'></span>" : "") + "</div>" +
+      "<div style='flex:1;overflow:hidden'><div style='display:flex;justify-content:space-between'><b>" + f.name + (ai ? " ✨" : (grp ? " (Group)" : " (" + f.gender + ")")) + "</b><span style='font-size:11px;color:#667781'>" + (la ? la.time : "") + "</span></div>" +
+      "<div style='display:flex;justify-content:space-between'><span style='font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'>" + sub + "</span>" + (uc ? "<span class='bdg'>" + uc + "</span>" : "") + "</div></div>";
     r.onclick = function() {
       fid = f.id; isGrpChat = grp; ur[f.id] = 0;
-      document.getElementById('sh').style.display = 'none'; document.getElementById('sc').style.display = 'flex';
-      document.getElementById('fa').innerText = avT; document.getElementById('fa').className = 'av ' + avC;
-      document.getElementById('fn').innerText = ai ? 'Zip AI ✨' : (grp ? f.name : f.name + ' (' + f.gender + ')');
-      document.getElementById('fs').innerText = grp ? (f.members.length + ' Members') : (f.online ? 'Online' : 'Offline');
-      document.getElementById('bac').style.display = (ai || grp) ? 'none' : 'inline-block';
-      document.getElementById('bvc').style.display = (ai || grp) ? 'none' : 'inline-block';
-      var mb = document.getElementById('ms'); mb.innerHTML = '';
-      if (ai && !m.length) appendMsg({ fromUserId: AI.id, text: 'Namaste ' + me.name + '! Main Zip AI hoon 🤖', time: 'Now' });
+      document.getElementById("sh").style.display = "none";
+      document.getElementById("sc").style.display = "flex";
+      document.getElementById("fa").innerText = avT;
+      document.getElementById("fa").className = "av " + avC;
+      document.getElementById("fn").innerText = ai ? "Zip AI ✨" : (grp ? f.name : f.name + " (" + f.gender + ")");
+      document.getElementById("fs").innerText = grp ? (f.members.length + " Members") : (f.online ? "Online" : "Offline");
+      document.getElementById("bac").style.display = (ai || grp) ? "none" : "inline-block";
+      document.getElementById("bvc").style.display = (ai || grp) ? "none" : "inline-block";
+      var mb = document.getElementById("ms");
+      mb.innerHTML = "";
+      if (ai && !m.length) appendMsg({ fromUserId: AI.id, text: "Namaste " + me.name + "! Main Zip AI hoon 🤖", time: "Now" });
       m.forEach(function(x) {
         appendMsg(x);
-        if (!grp && x.fromUserId === f.id && !x.ss && !ai) { sk.emit('message seen', { toUserId: f.id, msgId: x.msgId }); x.ss = true; }
+        if (!grp && x.fromUserId === f.id && !x.ss && !ai) { sk.emit("message seen", { toUserId: f.id, msgId: x.msgId }); x.ss = true; }
       });
-      try { localStorage.setItem('zip_chats', JSON.stringify(ch)); } catch(e) {}
+      try { localStorage.setItem("zip_chats", JSON.stringify(ch)); } catch(e) {}
     };
     b.appendChild(r);
   });
 }
 
-document.getElementById('bbk').onclick = function() { fid = null; isGrpChat = false; document.getElementById('sc').style.display = 'none'; document.getElementById('sh').style.display = 'flex'; renderList(); };
-document.getElementById('bclr').onclick = function() { if (fid && confirm('Saare messages delete karein?')) { ch[fid] = []; try { localStorage.setItem('zip_chats', JSON.stringify(ch)); } catch(e) {} document.getElementById('ms').innerHTML = ''; } };
+document.getElementById("bbk").onclick = function() { fid = null; isGrpChat = false; document.getElementById("sc").style.display = "none"; document.getElementById("sh").style.display = "flex"; renderList(); };
+document.getElementById("bclr").onclick = function() { if (fid && confirm("Saare messages delete karein?")) { ch[fid] = []; try { localStorage.setItem("zip_chats", JSON.stringify(ch)); } catch(e) {} document.getElementById("ms").innerHTML = ""; } };
 
-document.getElementById('fmsg').onsubmit = function(e) {
+document.getElementById("fmsg").onsubmit = function(e) {
   e.preventDefault();
-  var i = document.getElementById('tm');
+  var i = document.getElementById("tm");
   if (i.value.trim() && fid) {
-    sk.emit('private message', { toUserId: fid, msgId: 'm_' + Date.now(), text: i.value.trim(), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), isGroup: isGrpChat });
-    i.value = '';
+    sk.emit("private message", { toUserId: fid, msgId: "m_" + Date.now(), text: i.value.trim(), time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), isGroup: isGrpChat });
+    i.value = "";
   }
 };
 
-document.getElementById('batt').onclick = function() { document.getElementById('fm').click(); };
-document.getElementById('fm').onchange = function(e) {
+document.getElementById("batt").onclick = function() { document.getElementById("fm").click(); };
+document.getElementById("fm").onchange = function(e) {
   var f = e.target.files[0];
   if (!f || !fid || f.size > 20 * 1024 * 1024) return;
   var r = new FileReader();
   r.onload = function(v) {
-    sk.emit('private message', { toUserId: fid, msgId: 'm_' + Date.now(), mediaData: v.target.result, mediaType: f.type.startsWith('video/') ? 'video' : 'image', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), isGroup: isGrpChat });
+    sk.emit("private message", { toUserId: fid, msgId: "m_" + Date.now(), mediaData: v.target.result, mediaType: f.type.startsWith("video/") ? "video" : "image", time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }), isGroup: isGrpChat });
   };
-  r.readAsDataURL(f); e.target.value = '';
+  r.readAsDataURL(f);
+  e.target.value = "";
 };
 
-sk.on('private message', function(d) {
+sk.on("private message", function(d) {
   var id = d.isGroup ? d.toUserId : (d.fromUserId === me.id ? d.toUserId : d.fromUserId);
   if (!ch[id]) ch[id] = [];
-  if (!ch[id].some(function(x) { return x.msgId === d.msgId; })) { ch[id].push(d); try { localStorage.setItem('zip_chats', JSON.stringify(ch)); } catch(e) {} }
+  if (!ch[id].some(function(x) { return x.msgId === d.msgId; })) { ch[id].push(d); try { localStorage.setItem("zip_chats", JSON.stringify(ch)); } catch(e) {} }
   if (!d.isGroup && id !== AI.id && ct.findIndex(function(c) { return c.id === id; }) === -1 && d.fromUserId !== me.id) {
-    ct.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
-    try { localStorage.setItem('zip_contacts', JSON.stringify(ct)); } catch(e) {}
+    ct.unshift({ id: d.fromUserId, name: d.senderName || "User", gender: d.senderGender || "", online: true });
+    try { localStorage.setItem("zip_contacts", JSON.stringify(ct)); } catch(e) {}
   }
-  if (d.fromUserId !== me.id) { tone(false); if (document.hidden || fid !== id) sendNotif((d.senderName || 'Zip') + ' • Zip', d.mediaType ? '📎 Media' : d.text); }
-  if (fid === id) { appendMsg(d); if (!d.isGroup && d.fromUserId !== me.id && id !== AI.id) sk.emit('message seen', { toUserId: id, msgId: d.msgId }); }
+  if (d.fromUserId !== me.id) { tone(false); if (document.hidden || fid !== id) sendNotif((d.senderName || "Zip") + " • Zip", d.mediaType ? "📎 Media" : d.text); }
+  if (fid === id) { appendMsg(d); if (!d.isGroup && d.fromUserId !== me.id && id !== AI.id) sk.emit("message seen", { toUserId: id, msgId: d.msgId }); }
   else { if (d.fromUserId !== me.id) ur[id] = (ur[id] || 0) + 1; renderList(); }
 });
 
 function appendMsg(d) {
-  var m = d.fromUserId === me.id, v = document.createElement('div');
-  v.className = 'msg ' + (m ? 'sent' : 'rcvd'); v.id = 'msg-box-' + d.msgId;
-  var gs = (d.isGroup && !m) ? '<span class="g-sender">' + d.senderName + '</span>' : '';
-  var md = d.mediaData ? (d.mediaType === 'video' ? '<video src="' + d.mediaData + '" controls class="med"></video>' : '<img src="' + d.mediaData + '" class="med">') : '';
-  var th = d.text ? '<span id="txt-' + d.msgId + '">' + d.text + (d.edited ? ' <i style="font-size:10px;color:#667781">(edited)</i>' : '') + '</span>' : '';
-  var eb = (m && d.text && fid !== AI.id) ? '<button type="button" class="m-act" data-e="' + d.msgId + '">✏️</button>' : '';
-  var db = (m && fid !== AI.id) ? '<button type="button" class="m-act" data-d="' + d.msgId + '">🗑️</button>' : '';
-  v.innerHTML = gs + md + th + '<div class="meta">' + eb + db + '<span>' + d.time + '</span>' + (m && !d.i
+  var m = d.fromUserId === me.id, v = document.createElement("div");
+  v.className = "msg " + (m ? "sent" : "rcvd");
+  v.id = "msg-box-" + d.msgId;
+  var gs = (d.isGroup && !m) ? "<span class='g-sender'>" + d.senderName + "</span>" : "";
+  var md = d.mediaData ? (d.mediaType === "video" ? "<video src='" + d.mediaData + "' controls class='med'></video>" : "<img src='" + d.mediaData + "' class='med'>") : "";
+  var th = d.text ? "<span id='txt-" + d.msgId + "'>" + d.text + (d.edited ? " <i style='font-size:10px;color:#667781'>(edited)</i>" : "") + "</span>" : "";
+  var eb = (m && d.text && fid !== AI.id) ? "<button type='button' class='m-act' data-e='" + d.msgId + "'>✏️</button>" : "";
+  var db = (m && fid !== AI.id) ? "<button type='button' class='m-act' data-d='" + d.msgId + "'>🗑️</button>" : "";
+  v.innerHTML = gs + md + th + "<div class='meta'>" + eb + db + "<span>" + d.
