@@ -12,10 +12,11 @@ const io = new Server(server, {
 app.use(express.static(path.join(__dirname, 'public')));
 
 const users = {};          // userId -> { id, name, gender, online, socketId }
-const pendingMessages = {}; // receiverId -> Array of offline messages
+const connections = {};    // userId -> Set of friend userIds
+const pendingMessages = {}; // receiverId -> Array of unread/offline messages
 
 io.on('connection', (socket) => {
-    socket.on('register', ({ userId, name, gender }) => {
+    socket.on('register', ({ userId, name, gender, inviteFrom }) => {
         if (!userId || !name || name.trim().length < 5 || !gender) return;
 
         socket.userId = userId;
@@ -27,8 +28,17 @@ io.on('connection', (socket) => {
             socketId: socket.id
         };
 
-        // Sabhi users ko updated contact list bhejein (bina invite link ke direct open)
-        broadcastAllUsers();
+        if (!connections[userId]) connections[userId] = new Set();
+
+        // Invite link se judne par dono ko ek-doosre ki list mein add karein
+        if (inviteFrom && inviteFrom !== userId && users[inviteFrom]) {
+            connections[userId].add(inviteFrom);
+            connections[inviteFrom].add(userId);
+            sendContactList(inviteFrom);
+        }
+
+        sendContactList(userId);
+        notifyContacts(userId);
 
         // Agar offline rehne par koi message aaya tha toh turant deliver karein
         if (pendingMessages[userId] && pendingMessages[userId].length > 0) {
@@ -39,25 +49,53 @@ io.on('connection', (socket) => {
         }
     });
 
-    function broadcastAllUsers() {
-        const allList = Object.values(users).map(u => ({
-            id: u.id,
-            name: u.name,
-            gender: u.gender,
-            online: u.online
-        }));
-
-        Object.values(users).forEach(u => {
-            if (u.online && u.socketId) {
-                const others = allList.filter(item => item.id !== u.id);
-                io.to(u.socketId).emit('contact list', others);
-            }
-        });
+    function getContactsFor(uid) {
+        const list = [];
+        if (connections[uid]) {
+            connections[uid].forEach(friendId => {
+                if (users[friendId]) {
+                    list.push({
+                        id: users[friendId].id,
+                        name: users[friendId].name,
+                        gender: users[friendId].gender,
+                        online: users[friendId].online
+                    });
+                }
+            });
+        }
+        return list;
     }
 
+    function sendContactList(uid) {
+        const u = users[uid];
+        if (u && u.online && u.socketId) {
+            io.to(u.socketId).emit('contact list', getContactsFor(uid));
+        }
+    }
+
+    function notifyContacts(uid) {
+        if (connections[uid]) {
+            connections[uid].forEach(friendId => sendContactList(friendId));
+        }
+    }
+
+    // Message bhejna + Automatically dono ko ek-doosre ki list mein add karna
     socket.on('private message', ({ toUserId, msgId, text, mediaData, mediaType, time }) => {
         const sender = users[socket.userId];
         if (!sender || !toUserId) return;
+
+        if (!connections[sender.id]) connections[sender.id] = new Set();
+        if (!connections[toUserId]) connections[toUserId] = new Set();
+
+        // Agar pehle se list mein nahi the toh ab dono ki list mein add kar dein
+        const isNewForReceiver = !connections[toUserId].has(sender.id);
+        connections[sender.id].add(toUserId);
+        connections[toUserId].add(sender.id);
+
+        if (isNewForReceiver) {
+            sendContactList(toUserId);
+            sendContactList(sender.id);
+        }
 
         const payload = {
             msgId,
@@ -128,7 +166,7 @@ io.on('connection', (socket) => {
         const uid = socket.userId;
         if (uid && users[uid]) {
             users[uid].online = false;
-            broadcastAllUsers();
+            notifyContacts(uid);
         }
     });
 });
