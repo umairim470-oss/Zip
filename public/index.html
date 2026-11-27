@@ -1,292 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Welcome to Zip</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100dvh;background:#fff;overflow:hidden}
-.app{width:100%;height:100dvh;display:flex;flex-direction:column;position:relative}
-.hdr{background:linear-gradient(90deg,#008069,#006d59);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 5px rgba(0,0,0,.15);z-index:10}
-.hdr-l{display:flex;align-items:center;gap:10px}
-.av{width:42px;height:42px;background:#dfe5e7;border-radius:50%;display:flex;justify-content:center;align-items:center;color:#008069;font-weight:700;font-size:17px;position:relative;flex-shrink:0}
-.dot{width:11px;height:11px;background:#25d366;border:2px solid #fff;border-radius:50%;position:absolute;bottom:0;right:0}
-.inv-btn{background:#25d366;color:#fff;border:none;padding:8px 13px;border-radius:20px;font-weight:700;font-size:12px;cursor:pointer}
-.ic-btn{background:rgba(255,255,255,.2);color:#fff;border:none;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}
-.reg{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;gap:15px}
-.badge{width:72px;height:72px;background:#008069;border-radius:20px;display:flex;justify-content:center;align-items:center;font-size:36px;color:#fff}
-.inp{width:100%;max-width:290px;padding:13px;border:2px solid #008069;border-radius:10px;font-size:16px;text-align:center;outline:none}
-.g-box{display:flex;gap:12px;width:100%;max-width:290px}
-.g-btn{flex:1;padding:13px;border:2px solid #ccc;background:#fff;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
-.g-btn.act{border-color:#008069;background:#d9fdd3;color:#008069}
-.err{color:#e53935;font-size:13px;font-weight:700;display:none}
-.go-btn{background:#008069;color:#fff;border:none;padding:14px 32px;border-radius:25px;font-size:16px;font-weight:700;cursor:pointer}
-.home{flex:1;display:none;flex-direction:column;overflow:hidden;background:#fff}
-.list{flex:1;overflow-y:auto}
-.row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f0f2f5;gap:13px;cursor:pointer}
-.row:active{background:#f5f6f6}
-.unread-badge{background:#25d366;color:#fff;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;justify-content:center;align-items:center;padding:0 6px}
-.chat{flex:1;display:none;flex-direction:column;overflow:hidden;background:#efeae2}
-.msgs{flex:1;padding:12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:18px 18px}
-.msg{max-width:80%;padding:8px 12px;border-radius:12px;font-size:15px;line-height:1.4;box-shadow:0 1px 2px rgba(0,0,0,.1);word-wrap:break-word}
-.sent{background:#d9fdd3;align-self:flex-end;border-top-right-radius:2px}
-.rcvd{background:#fff;align-self:flex-start;border-top-left-radius:2px}
-.media{max-width:100%;max-height:230px;border-radius:8px;display:block;margin:4px 0}
-.meta{float:right;margin-left:8px;margin-top:4px;font-size:10px;color:#667781}
-.seen{color:#53bdeb;font-weight:700}
-.bar{background:#f0f2f5;padding:9px 10px;display:flex;gap:8px;align-items:center}
-.bar input[type=text]{flex:1;padding:11px 15px;border:none;border-radius:22px;font-size:15px;outline:none;background:#fff}
-.c-ov{position:fixed;inset:0;background:rgba(11,20,26,.96);z-index:50;display:none;flex-direction:column;justify-content:space-between;align-items:center;padding:30px 20px;color:#fff}
-.v-box{width:100%;flex:1;position:relative;margin:15px 0;background:#1f2c34;border-radius:12px;overflow:hidden}
-#r-vid{width:100%;height:100%;object-fit:cover}
-#l-vid{width:100px;height:140px;object-fit:cover;position:absolute;bottom:10px;right:10px;border-radius:10px;border:2px solid #25d366}
-.c-btn{width:58px;height:58px;border-radius:50%;border:none;font-size:22px;color:#fff;cursor:pointer}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip Chat</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #d1d7db; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .app-container { width: 100%; max-width: 500px; height: 92vh; background: #ffffff; display: flex; flex-direction: column; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }
+        
+        /* Header */
+        .header { background-color: #008069; color: white; padding: 15px 18px; display: flex; align-items: center; gap: 12px; }
+        .back-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
+        .avatar { width: 40px; height: 40px; background: #dfe5e7; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #008069; font-weight: bold; font-size: 16px; }
+        .header-info h3 { font-size: 16px; font-weight: 600; }
+        .header-info p { font-size: 12px; color: #d9fdd3; }
+
+        /* Contacts Screen */
+        .contacts-screen { flex: 1; overflow-y: auto; background: #ffffff; }
+        .empty-msg { text-align: center; color: #667781; padding: 40px 20px; font-size: 14px; line-height: 1.5; }
+        .contact-item { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid #f0f2f5; cursor: pointer; gap: 14px; }
+        .contact-item:hover { background-color: #f5f6f6; }
+        .contact-details { flex: 1; }
+        .contact-name { font-size: 16px; font-weight: 500; color: #111b21; }
+        .contact-status { font-size: 12px; color: #00a884; margin-top: 2px; }
+        .badge { background-color: #25d366; color: white; font-size: 11px; font-weight: bold; padding: 3px 7px; border-radius: 12px; display: none; }
+
+        /* Chat Screen */
+        .chat-screen { flex: 1; display: none; flex-direction: column; background: #efeae2; overflow: hidden; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
+        .message { max-width: 75%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.1); word-wrap: break-word; }
+        .message.sent { background-color: #d9fdd3; align-self: flex-end; border-top-right-radius: 0; }
+        .message.received { background-color: #ffffff; align-self: flex-start; border-top-left-radius: 0; }
+        .timestamp { font-size: 10px; color: #667781; float: right; margin-left: 10px; margin-top: 5px; }
+
+        /* Input Area */
+        .input-area { background-color: #f0f2f5; padding: 10px 12px; display: flex; gap: 10px; align-items: center; }
+        .input-area input { flex: 1; padding: 12px 15px; border: none; border-radius: 24px; outline: none; font-size: 15px; }
+        .input-area button { background-color: #008069; color: white; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; justify-content: center; align-items: center; }
+    </style>
 </head>
 <body>
-<div class="app">
-  <div class="reg" id="s-reg">
-    <div class="badge">⚡</div>
-    <h2>Welcome to Zip</h2>
-    <p>Sirf ek baar naam aur gender daalein:</p>
-    <input type="text" id="u-name" class="inp" placeholder="Enter your 5 word name">
-    <div class="g-box">
-      <button type="button" class="g-btn" id="b-m">👨 Male</button>
-      <button type="button" class="g-btn" id="b-f">👩 Female</button>
-    </div>
-    <div class="err" id="err">5 akshar ka naam aur Male/Female chunein!</div>
-    <button type="button" class="go-btn" id="b-go">Aage Badhein</button>
-  </div>
 
-  <div class="home" id="s-home">
-    <div class="hdr">
-      <div class="hdr-l"><div class="av">⚡</div><div><h3>Welcome to Zip</h3><p id="my-tag" style="font-size:11px;color:#d9fdd3"></p></div></div>
-      <button type="button" class="inv-btn" id="b-inv">+ Invite Link</button>
+<div class="app-container">
+    <div class="header">
+        <button class="back-btn" id="back-btn" onclick="showContacts()">←</button>
+        <div class="avatar" id="header-avatar">Z</div>
+        <div class="header-info">
+            <h3 id="header-title">Zip Chat</h3>
+            <p id="header-subtitle">Online Friends</p>
+        </div>
     </div>
-    <div class="list" id="c-list"></div>
-  </div>
 
-  <div class="chat" id="s-chat">
-    <div class="hdr">
-      <div class="hdr-l">
-        <button type="button" id="b-back" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">←</button>
-        <div class="av" id="f-av">U</div>
-        <div><h3 id="f-name" style="font-size:15px">Friend</h3><p id="f-st" style="font-size:11px">Offline</p></div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button type="button" class="ic-btn" id="b-acall">📞</button>
-        <button type="button" class="ic-btn" id="b-vcall">📹</button>
-      </div>
+    <!-- Contacts List Screen -->
+    <div class="contacts-screen" id="contacts-screen">
+        <div class="empty-msg" id="empty-msg">Abhi koi dost online nahi hai.<br>Apne doston ko is app ka link bhejein!</div>
+        <div id="user-list"></div>
     </div>
-    <div class="msgs" id="msgs"></div>
-    <form class="bar" id="f-msg">
-      <input type="file" id="f-med" accept="image/*,video/*" style="display:none">
-      <button type="button" id="b-att" style="background:#fff;border:none;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer">📎</button>
-      <input type="text" id="t-msg" placeholder="Message likhein...">
-      <button type="submit" style="background:#008069;color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:17px;cursor:pointer">➤</button>
-    </form>
-  </div>
 
-  <div class="c-ov" id="s-call">
-    <div style="text-align:center"><h3 id="c-tit">Calling...</h3><p id="c-st" style="color:#25d366">Connecting...</p></div>
-    <div class="v-box"><video id="r-vid" autoplay playsinline></video><video id="l-vid" autoplay playsinline muted></video></div>
-    <div style="display:flex;gap:24px">
-      <button type="button" class="c-btn" id="b-acc" style="background:#25d366;display:none">📞</button>
-      <button type="button" class="c-btn" id="b-end" style="background:#e53935">📵</button>
+    <!-- Private Chat Screen -->
+    <div class="chat-screen" id="chat-screen">
+        <div class="messages" id="messages"></div>
+        <form class="input-area" id="chat-form">
+            <input type="text" id="msg-input" placeholder="Message likhein..." autocomplete="off" required />
+            <button type="submit">➤</button>
+        </form>
     </div>
-  </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const socket = typeof io !== 'undefined' ? io() : {emit:()=>{},on:()=>{}};
-const invFrom = new URLSearchParams(location.search).get('invite');
-let me = null; try{ me = JSON.parse(localStorage.getItem('zip_user')); }catch(e){}
-let chats = {}; try{ chats = JSON.parse(localStorage.getItem('zip_chats')) || {}; }catch(e){}
-let contacts = []; try{ contacts = JSON.parse(localStorage.getItem('zip_contacts')) || []; }catch(e){}
-let unread = {};
-let fid = null, gen = '', lStream = null, pc = null, pOffer = null, cType = 'video', cTarget = null;
-const rtc = {iceServers:[{urls:'stun:stun.l.google.com:19302'}]};
+    const socket = io();
+    const myName = prompt("Apna naam likhein:") || "User_" + Math.floor(Math.random() * 1000);
+    
+    let selectedUserId = null;
+    let selectedUserName = "";
+    const chatHistory = {}; // Har dost ki chat alag store hogi
+    const unreadCounts = {};
 
-document.getElementById('b-m').onclick = () => { gen='Male'; document.getElementById('b-m').classList.add('act'); document.getElementById('b-f').classList.remove('act'); };
-document.getElementById('b-f').onclick = () => { gen='Female'; document.getElementById('b-f').classList.add('act'); document.getElementById('b-m').classList.remove('act'); };
+    socket.on('connect', () => {
+        socket.emit('register', myName);
+        document.getElementById('header-subtitle').innerText = "Logged in as " + myName;
+    });
 
-document.getElementById('b-go').onclick = () => {
-  const n = document.getElementById('u-name').value.trim();
-  if(n.length < 5 || !gen){ document.getElementById('err').style.display='block'; return; }
-  me = {id:'u_'+Date.now()+'_'+Math.random().toString(36).slice(2,6), name:n, gender:gen};
-  try{ localStorage.setItem('zip_user', JSON.stringify(me)); }catch(e){}
-  boot();
-};
+    // Online doston ki list update karna
+    socket.on('user list', (users) => {
+        const userListDiv = document.getElementById('user-list');
+        const emptyMsg = document.getElementById('empty-msg');
+        userListDiv.innerHTML = '';
 
-function boot(){
-  document.getElementById('s-reg').style.display='none';
-  document.getElementById('s-home').style.display='flex';
-  document.getElementById('my-tag').innerText = me.name+' ('+me.gender+')';
-  socket.emit('register',{userId:me.id,name:me.name,gender:me.gender,inviteFrom:invFrom});
-  if(invFrom) history.replaceState({},'',location.pathname);
-  drawList();
-}
-if(me && me.id && me.name) boot();
-socket.on('connect',()=>{ if(me) socket.emit('register',{userId:me.id,name:me.name,gender:me.gender}); });
+        const otherUsers = users.filter(u => u.id !== socket.id);
+        emptyMsg.style.display = otherUsers.length === 0 ? 'block' : 'none';
 
-document.getElementById('b-inv').onclick = () => {
-  const u = location.origin+'/?invite='+me.id;
-  if(navigator.clipboard) navigator.clipboard.writeText(u).then(()=>alert('Invite Link copy ho gaya!')).catch(()=>prompt('Copy karein:',u));
-  else prompt('Copy karein:',u);
-};
+        otherUsers.forEach(user => {
+            const count = unreadCounts[user.id] || 0;
+            const item = document.createElement('div');
+            item.className = 'contact-item';
+            item.onclick = () => openChat(user.id, user.name);
+            item.innerHTML = `
+                <div class="avatar">${user.name.charAt(0).toUpperCase()}</div>
+                <div class="contact-details">
+                    <div class="contact-name">${user.name}</div>
+                    <div class="contact-status">● online</div>
+                </div>
+                <span class="badge" style="display: ${count > 0 ? 'inline-block' : 'none'}">${count}</span>
+            `;
+            userListDiv.appendChild(item);
+        });
 
-socket.on('contact list',(l)=>{
-  l.forEach(srvFriend => {
-    const idx = contacts.findIndex(c => c.id === srvFriend.id);
-    if(idx >= 0) contacts[idx] = srvFriend;
-    else contacts.unshift(srvFriend);
-  });
-  try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
-  drawList();
-  if(fid){
-    const f = contacts.find(c=>c.id===fid);
-    if(f) document.getElementById('f-st').innerText = f.online?'Online':'Offline';
-  }
-});
+        // Agar jis dost se baat chal rahi thi woh offline ho jaye
+        if (selectedUserId && !otherUsers.find(u => u.id === selectedUserId)) {
+            document.getElementById('header-subtitle').innerText = "offline";
+        }
+    });
 
-function drawList(){
-  const box = document.getElementById('c-list');
-  if(!contacts.length){
-    box.innerHTML='<div style="padding:50px 20px;text-align:center;color:#667781"><h3>Abhi koi dost nahi juda</h3><p style="margin-top:8px">Upar <b>+ Invite Link</b> daba kar dost ko link bhejein. Jaise hi woh judenge ya message karenge, unki chat yahan aa jayegi.</p></div>';
-    return;
-  }
-  box.innerHTML='';
-  contacts.forEach(f=>{
-    const m = chats[f.id]||[], last = m[m.length-1], uCount = unread[f.id]||0;
-    const r = document.createElement('div'); r.className='row';
-    r.innerHTML='<div class="av">'+f.name[0].toUpperCase()+(f.online?'<span class="dot"></span>':'')+'</div>'+
-      '<div style="flex:1;overflow:hidden"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><b>'+f.name+' ('+f.gender+')</b><span style="font-size:11px;color:'+(uCount?'#25d366':'#667781')+'">'+(last?last.time:'')+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#667781;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last?(last.mediaType?'📎 Media':last.text):'Tap to chat')+'</span>'+(uCount?'<span class="unread-badge">'+uCount+'</span>':'')+'</div></div>';
-    r.onclick = ()=>{
-      fid = f.id;
-      unread[f.id] = 0;
-      document.getElementById('s-home').style.display='none';
-      document.getElementById('s-chat').style.display='flex';
-      document.getElementById('f-av').innerText=f.name[0].toUpperCase();
-      document.getElementById('f-name').innerText=f.name+' ('+f.gender+')';
-      document.getElementById('f-st').innerText=f.online?'Online':'Offline';
-      const mb = document.getElementById('msgs'); mb.innerHTML='';
-      (chats[f.id]||[]).forEach(x=>{
-        addMsg(x);
-        if(x.fromUserId===f.id && !x.seenSent){ socket.emit('message seen',{toUserId:f.id,msgId:x.msgId}); x.seenSent=true; }
-      });
-      try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
-    };
-    box.appendChild(r);
-  });
-}
+    // Kisi dost ki chat kholna
+    function openChat(userId, userName) {
+        selectedUserId = userId;
+        selectedUserName = userName;
+        unreadCounts[userId] = 0;
 
-document.getElementById('b-back').onclick = ()=>{ fid=null; document.getElementById('s-chat').style.display='none'; document.getElementById('s-home').style.display='flex'; drawList(); };
+        document.getElementById('contacts-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('header-title').innerText = userName;
+        document.getElementById('header-subtitle').innerText = 'online';
+        document.getElementById('header-avatar').innerText = userName.charAt(0).toUpperCase();
 
-document.getElementById('f-msg').onsubmit = (e)=>{
-  e.preventDefault();
-  const i = document.getElementById('t-msg');
-  if(i.value.trim() && fid){
-    const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    socket.emit('private message',{toUserId:fid,msgId:'m_'+Date.now(),text:i.value.trim(),time:t});
-    i.value='';
-  }
-};
+        renderMessages();
+    }
 
-document.getElementById('b-att').onclick = ()=>document.getElementById('f-med').click();
-document.getElementById('f-med').onchange = (e)=>{
-  const file = e.target.files[0]; if(!file || !fid || file.size>20*1024*1024) return;
-  const rd = new FileReader();
-  rd.onload = (ev)=>{
-    const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    socket.emit('private message',{toUserId:fid,msgId:'m_'+Date.now(),mediaData:ev.target.result,mediaType:file.type.startsWith('video/')?'video':'image',time:t});
-  };
-  rd.readAsDataURL(file); e.target.value='';
-};
+    // Wapas contacts list par jana
+    function showContacts() {
+        selectedUserId = null;
+        document.getElementById('chat-screen').style.display = 'none';
+        document.getElementById('contacts-screen').style.display = 'block';
+        document.getElementById('back-btn').style.display = 'none';
+        document.getElementById('header-title').innerText = 'Zip Chat';
+        document.getElementById('header-subtitle').innerText = 'Logged in as ' + myName;
+        document.getElementById('header-avatar').innerText = 'Z';
+    }
 
-socket.on('private message',(d)=>{
-  const id = d.fromUserId===me.id ? d.toUserId : d.fromUserId;
-  if(!chats[id]) chats[id]=[];
-  // Duplicate message prevent karein
-  if(!chats[id].some(x => x.msgId === d.msgId)){
-    chats[id].push(d);
-    try{ localStorage.setItem('zip_chats',JSON.stringify(chats)); }catch(e){}
-  }
+    // Message bhejna
+    document.getElementById('chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('msg-input');
+        if (input.value.trim() && selectedUserId) {
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const text = input.value;
 
-  // Agar naya sender hai toh list mein add karein aur sabse upar layein
-  const existingIdx = contacts.findIndex(c => c.id === id);
-  if(existingIdx === -1 && d.fromUserId !== me.id){
-    contacts.unshift({ id: d.fromUserId, name: d.senderName || 'User', gender: d.senderGender || '', online: true });
-    try{ localStorage.setItem('zip_contacts', JSON.stringify(contacts)); }catch(e){}
-  } else if(existingIdx > 0){
-    const [moved] = contacts.splice(existingIdx, 1);
-    contacts.unshift(moved);
-  }
+            socket.emit('private message', { to: selectedUserId, text: text, time: time });
 
-  if(fid===id){
-    addMsg(d);
-    if(d.fromUserId!==me.id) socket.emit('message seen',{toUserId:id,msgId:d.msgId});
-  } else {
-    if(d.fromUserId!==me.id) unread[id] = (unread[id]||0) + 1;
-    drawList();
-  }
-});
+            if (!chatHistory[selectedUserId]) chatHistory[selectedUserId] = [];
+            chatHistory[selectedUserId].push({ type: 'sent', text: text, time: time });
+            
+            renderMessages();
+            input.value = '';
+        }
+    });
 
-function addMsg(d){
-  const isMe = d.fromUserId===me.id, div = document.createElement('div');
-  div.className = 'msg '+(isMe?'sent':'rcvd');
-  const med = d.mediaData ? (d.mediaType==='video'?'<video src="'+d.mediaData+'" controls class="media"></video>':'<img src="'+d.mediaData+'" class="media">') : '';
-  div.innerHTML = med+(d.text?'<span>'+d.text+'</span>':'')+'<span class="meta">'+d.time+(isMe?' <span class="'+(d.seen?'seen':'')+'" id="tk-'+d.msgId+'">'+(d.seen?'✓✓':'✓')+'</span>':'')+'</span>';
-  const mb = document.getElementById('msgs'); mb.appendChild(div); mb.scrollTop=mb.scrollHeight;
-}
+    // Dost ka message receive karna
+    socket.on('private message', ({ from, senderName, text, time }) => {
+        if (!chatHistory[from]) chatHistory[from] = [];
+        chatHistory[from].push({ type: 'received', text: text, time: time });
 
-socket.on('message seen',({fromUserId,msgId})=>{
-  if(chats[fromUserId]){ const m=chats[fromUserId].find(x=>x.msgId===msgId); if(m) m.seen=true; try{localStorage.setItem('zip_chats',JSON.stringify(chats));}catch(e){} }
-  const t=document.getElementById('tk-'+msgId); if(t){ t.innerText='✓✓'; t.classList.add('seen'); }
-});
+        if (selectedUserId === from) {
+            renderMessages();
+        } else {
+            unreadCounts[from] = (unreadCounts[from] || 0) + 1;
+            // Badge update karne ke liye list refresh trigger
+            const badges = document.querySelectorAll('.contact-item');
+            badges.forEach(item => {
+                if (item.querySelector('.contact-name').innerText === senderName) {
+                    const b = item.querySelector('.badge');
+                    b.innerText = unreadCounts[from];
+                    b.style.display = 'inline-block';
+                }
+            });
+        }
+    });
 
-async function setupP(tp){
-  cType=tp; lStream=await navigator.mediaDevices.getUserMedia({audio:true,video:tp==='video'});
-  document.getElementById('l-vid').srcObject=lStream; document.getElementById('l-vid').style.display=tp==='video'?'block':'none';
-  pc=new RTCPeerConnection(rtc); lStream.getTracks().forEach(t=>pc.addTrack(t,lStream));
-  pc.ontrack=(e)=>{document.getElementById('r-vid').srcObject=e.streams[0];};
-  pc.onicecandidate=(e)=>{if(e.candidate && cTarget) socket.emit('ice-candidate',{toUserId:cTarget,candidate:e.candidate});};
-}
+    function renderMessages() {
+        const messagesDiv = document.getElementById('messages');
+        messagesDiv.innerHTML = '';
+        const msgs = chatHistory[selectedUserId] || [];
 
-async function callNow(tp){
-  if(!fid) return;
-  try{
-    cTarget=fid; document.getElementById('s-call').style.display='flex';
-    document.getElementById('c-tit').innerText=tp==='video'?'Video Calling...':'Voice Calling...';
-    document.getElementById('c-st').innerText='Ringing...'; document.getElementById('b-acc').style.display='none';
-    await setupP(tp); const off=await pc.createOffer(); await pc.setLocalDescription(off);
-    socket.emit('call-user',{toUserId:cTarget,offer:off,callType:tp});
-  }catch(e){ alert('Camera/Mic allow karein!'); stopC(false); }
-}
-document.getElementById('b-acall').onclick=()=>callNow('audio');
-document.getElementById('b-vcall').onclick=()=>callNow('video');
-
-socket.on('incoming-call',({fromUserId,callerName,offer,callType})=>{
-  cTarget=fromUserId; pOffer=offer; cType=callType;
-  document.getElementById('s-call').style.display='flex'; document.getElementById('c-tit').innerText=callerName;
-  document.getElementById('c-st').innerText=callType==='video'?'Incoming Video Call...':'Incoming Voice Call...';
-  document.getElementById('b-acc').style.display='inline-block';
-});
-
-document.getElementById('b-acc').onclick=async()=>{
-  document.getElementById('b-acc').style.display='none'; document.getElementById('c-st').innerText='Connected';
-  await setupP(cType); await pc.setRemoteDescription(new RTCSessionDescription(pOffer));
-  const ans=await pc.createAnswer(); await pc.setLocalDescription(ans);
-  socket.emit('answer-call',{toUserId:cTarget,answer:ans});
-};
-
-socket.on('call-answered',async({answer})=>{ document.getElementById('c-st').innerText='Connected'; if(pc) await pc.setRemoteDescription(new RTCSessionDescription(answer)); });
-socket.on('ice-candidate',async({candidate})=>{ if(pc&&candidate) try{await pc.addIceCandidate(new RTCIceCandidate(candidate));}catch(e){} });
-function stopC(n){ if(n&&cTarget) socket.emit('end-call',{toUserId:cTarget}); if(lStream){lStream.getTracks().forEach(t=>t.stop());lStream=null;} if(pc){pc.close();pc=null;} cTarget=null; document.getElementById('s-call').style.display='none'; }
-document.getElementById('b-end').onclick=()=>stopC(true);
-socket.on('call-ended',()=>stopC(false));
+        msgs.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'message ' + m.type;
+            div.innerHTML = `<span>${m.text}</span><span class="timestamp">${m.time}</span>`;
+            messagesDiv.appendChild(div);
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
 </script>
 </body>
 </html>
